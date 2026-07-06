@@ -11,7 +11,7 @@
 
 .result-title {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 900;
   font-size: 44px;
   color: var(--text-hi);
   margin: 0 0 var(--sp-5);
@@ -33,7 +33,7 @@
 
 .result-grade {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 900;
   font-size: 24px;
   color: var(--text-hi);
   background: rgba(232, 176, 75, 0.14);

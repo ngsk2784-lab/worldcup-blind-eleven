@@ -21,7 +21,7 @@
 
 .onboarding-title {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 900;
   font-size: clamp(32px, 6vw, 64px);
   line-height: 1;
   color: var(--text-hi);
