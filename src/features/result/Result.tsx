@@ -126,7 +126,7 @@ export function Result({
               <div
                 key={slot.id}
                 className="result-pitch-dot"
-                style={{ left: `${slot.x * 100}%`, top: `${(1 - slot.y) * 100}%`, background: color }}
+                style={{ left: `${slot.x * 100}%`, top: `${slot.y * 100}%`, background: color }}
                 title={entry?.player.reveal.realName}
               >
                 <span className="result-pitch-label">

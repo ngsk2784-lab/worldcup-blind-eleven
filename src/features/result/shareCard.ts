@@ -67,7 +67,7 @@ export function drawShareCard(
   for (const slot of formation.slots) {
     const entry = finalXI.find((e) => e.slot.id === slot.id);
     const cx = pitchX + slot.x * pitchW;
-    const cy = pitchY + (1 - slot.y) * pitchH;
+    const cy = pitchY + slot.y * pitchH;
     const color = entry ? positionColorHex(entry.player.positionGroup) : '#33424F';
     ctx.beginPath();
     ctx.arc(cx, cy, 26, 0, Math.PI * 2);
