@@ -3,9 +3,154 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light dark;
+  color-scheme: dark;
+
+  /* --- 배경 (야간 경기장, 깊이감 3단) --- */
+  --bg-base: #0a0e14;
+  --bg-pitch: #0d141c;
+  --bg-vignette: #06090d;
+
+  /* --- 표면 --- */
+  --surface-1: #141b24;
+  --surface-2: #1c2631;
+  --surface-3: #26333f;
+  --surface-line: #33424f;
+
+  /* --- 텍스트 --- */
+  --text-hi: #eaf1f7;
+  --text-mid: #a5b4c0;
+  --text-lo: #66757f;
+  --text-onAccent: #0a0e14;
+
+  /* --- 강조: 플러드라이트 앰버 --- */
+  --accent: #e8b04b;
+  --accent-hi: #f6c766;
+  --accent-dim: #8a6a2c;
+  --accent-glow: rgba(232, 176, 75, 0.45);
+
+  /* --- 데이터 청록 --- */
+  --data: #4fc3d9;
+  --data-dim: #2a6b78;
+
+  /* --- 포지션군 4색 --- */
+  --pos-gk: #e8b04b;
+  --pos-def: #5b8def;
+  --pos-mid: #3fb98c;
+  --pos-fwd: #e5533c;
+
+  /* --- 상태 --- */
+  --ok: #3fb98c;
+  --warn: #e8b04b;
+  --error: #e5533c;
+
+  /* --- 타이포 --- */
+  /* 2026-07-06: 'Black Han Sans'는 흔한 음절(름/눈/목/등)에 notdef 글리프를 갖는
+     폰트 자체 결함이 확인되어 폐기(design-spec §1.2). 'Gothic A1'(700/900,
+     완전한 한글 커버리지)로 대체 — 한글 헤드라인은 font-weight:900로 임팩트 확보. */
+  --font-display: 'Oswald', 'Gothic A1', 'Noto Sans KR', sans-serif;
+  --font-body: 'Noto Sans KR', 'Oswald', sans-serif;
+  --font-mono: 'Roboto Mono', 'Noto Sans KR', monospace;
+
+  /* --- 간격 --- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+  --sp-9: 96px;
+  --content-max: 1200px;
+
+  /* --- 반경 --- */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+  --r-pill: 999px;
+
+  /* --- 그림자 & 발광 --- */
+  --sh-1: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --sh-2: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --sh-3: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --sh-inset: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --glow-accent: 0 0 0 1px var(--accent), 0 0 24px var(--accent-glow);
+  --glow-soft: 0 0 32px rgba(232, 176, 75, 0.25);
+  --glow-data: 0 0 20px rgba(79, 195, 217, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
 }
 
 body {
   margin: 0;
+  font-family: var(--font-body);
+  color: var(--text-mid);
+  background: radial-gradient(
+    ellipse 120% 90% at 50% 30%,
+    var(--bg-pitch) 0%,
+    var(--bg-base) 55%,
+    var(--bg-vignette) 100%
+  );
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.overline {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+}
+
+/* 공통 어트리뷰션(StatsBomb) — 전 화면 상시 노출, 작게 */
+.attribution {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--text-lo);
+  white-space: nowrap;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.attribution-logo {
+  height: 13px;
+  width: auto;
+  display: block;
+}
+
+/* 탐색화면(S1) 하단바 전용 어트리뷰션 반응형 숨김.
+ * § 재작업 라운드1 #8 e2e에서 발견: `.attribution`(display:inline-flex, 여기 위에 정의)이
+ * 유틸리티 레이어(@tailwind utilities) 이후 소스 순서라 Tailwind의 `hidden` 유틸과
+ * 동일 specificity(0,1,0)에서 항상 이겨버려, 모바일에서 "숨김" 처리가 안 되고 CTA 버튼
+ * 클릭을 가로채는 버그가 있었다. 클래스 2개 조합으로 specificity(0,2,0)를 올려 확실히 이기게 한다. */
+.attribution.explore-footer-attribution {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .attribution.explore-footer-attribution {
+    display: inline-flex;
+  }
+}
+
+button {
+  font-family: var(--font-body);
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }

@@ -1,0 +1,133 @@
+.onboarding-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--sp-7) var(--sp-5);
+  position: relative;
+}
+
+.onboarding-logo {
+  position: absolute;
+  top: var(--sp-6);
+  left: var(--sp-6);
+}
+
+.onboarding-hero {
+  max-width: 720px;
+}
+
+.onboarding-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(32px, 6vw, 64px);
+  line-height: 1;
+  color: var(--text-hi);
+  margin: 0;
+}
+
+.onboarding-fan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 140px;
+  margin: var(--sp-7) 0;
+  gap: -20px;
+}
+
+.onboarding-fan-card {
+  width: 110px;
+  height: 130px;
+  background: var(--surface-2);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 -14px;
+  border: 1px solid var(--surface-line);
+}
+
+.onboarding-desc {
+  color: var(--text-mid);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: var(--sp-6);
+}
+
+.onboarding-cta {
+  height: 56px;
+  padding: 0 var(--sp-6);
+  border-radius: var(--r-md);
+  border: none;
+  background: var(--accent);
+  color: var(--text-onAccent);
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: var(--glow-soft);
+  transition: 0.18s;
+}
+
+.onboarding-cta:hover {
+  background: var(--accent-hi);
+}
+
+.onboarding-chips {
+  margin-top: var(--sp-4);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.onboarding-chip-btn {
+  padding: 6px 16px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--surface-line);
+  background: transparent;
+  color: var(--text-mid);
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.18s;
+}
+
+.onboarding-chip-btn:hover {
+  color: var(--text-hi);
+  border-color: var(--text-mid);
+}
+
+.onboarding-chip-btn.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(232, 176, 75, 0.12);
+}
+
+.onboarding-chip-formation {
+  padding: 6px 16px;
+  border-radius: var(--r-pill);
+  border: 1px dashed var(--surface-line);
+  color: var(--text-lo);
+  font-size: 13px;
+}
+
+.onboarding-caption {
+  position: absolute;
+  bottom: var(--sp-6);
+  font-size: 11px;
+  color: var(--text-lo);
+}
+
+@media (max-width: 600px) {
+  .onboarding-fan-card {
+    width: 84px;
+    height: 100px;
+  }
+  .onboarding-caption {
+    position: static;
+    margin-top: var(--sp-6);
+  }
+}

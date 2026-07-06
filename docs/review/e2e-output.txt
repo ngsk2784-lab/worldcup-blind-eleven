@@ -1,0 +1,31 @@
+[e2e] navigating to http://localhost:5176
+[e2e] screenshot saved: s0-onboarding-desktop-1440.png
+[e2e] S0 -> S1 온보딩 시작 클릭
+[e2e] screenshot saved: s1-explore-desktop-1440.png
+[e2e] S1 -> S2 배치하러 가기 클릭
+[e2e] 배치 완료: GK (GK) [1/11]
+[e2e] 배치 완료: LB (DEF) [2/11]
+[e2e] 배치 완료: CB1 (DEF) [3/11]
+[e2e] 배치 완료: CB2 (DEF) [4/11]
+[e2e] 배치 완료: RB (DEF) [5/11]
+[e2e] 배치 완료: CM1 (MID) [6/11]
+[e2e] 배치 완료: CM2 (MID) [7/11]
+[e2e] 배치 완료: CM3 (MID) [8/11]
+[e2e] 배치 완료: LW (FWD) [9/11]
+[e2e] 배치 완료: ST (FWD) [10/11]
+[e2e] 배치 완료: RW (FWD) [11/11]
+[e2e] 배치 카운트 확인: 11/11
+[e2e] screenshot saved: s2-formation-desktop-1440-full.png
+[e2e] 정체공개 버튼 disabled=false
+[e2e] S2 -> S3 정체 공개 클릭
+[e2e] screenshot saved: s3-confirm-desktop-1440.png
+[e2e] S3 -> S4 공개한다 클릭
+[e2e] screenshot saved: s4-reveal-desktop-1440.png
+[e2e] S4 -> S5 건너뛰기 클릭
+[e2e] screenshot saved: s5-result-desktop-1440.png
+[e2e] 재도전(reset) -> 온보딩 복귀 확인 완료
+[e2e] 모바일 스크린샷: onboarding
+[e2e] 모바일 스크린샷: explore
+[e2e] 모바일 스크린샷: formation
+[e2e] 콘솔/페이지 에러 없음
+[e2e] E2E 전체 플로우 완주 성공

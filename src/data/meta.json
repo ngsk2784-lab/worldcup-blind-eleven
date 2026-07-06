@@ -2,8 +2,13 @@
   "tournaments": [
     {
       "year": 2022,
-      "playerCount": 18,
-      "label": "2022 카타르 월드컵 (mock)"
+      "playerCount": 56,
+      "label": "2022 카타르 월드컵"
+    },
+    {
+      "year": 2018,
+      "playerCount": 56,
+      "label": "2018 러시아 월드컵"
     }
   ],
   "positionGroups": [
@@ -96,9 +101,153 @@
           "y": 0.22
         }
       ]
+    },
+    {
+      "key": "4-4-2",
+      "label": "4-4-2",
+      "slots": [
+        {
+          "id": "GK",
+          "group": "GK",
+          "x": 0.5,
+          "y": 0.94
+        },
+        {
+          "id": "LB",
+          "group": "DEF",
+          "x": 0.12,
+          "y": 0.74
+        },
+        {
+          "id": "CB1",
+          "group": "DEF",
+          "x": 0.36,
+          "y": 0.8
+        },
+        {
+          "id": "CB2",
+          "group": "DEF",
+          "x": 0.64,
+          "y": 0.8
+        },
+        {
+          "id": "RB",
+          "group": "DEF",
+          "x": 0.88,
+          "y": 0.74
+        },
+        {
+          "id": "LM",
+          "group": "MID",
+          "x": 0.12,
+          "y": 0.5
+        },
+        {
+          "id": "CM1",
+          "group": "MID",
+          "x": 0.38,
+          "y": 0.54
+        },
+        {
+          "id": "CM2",
+          "group": "MID",
+          "x": 0.62,
+          "y": 0.54
+        },
+        {
+          "id": "RM",
+          "group": "MID",
+          "x": 0.88,
+          "y": 0.5
+        },
+        {
+          "id": "ST1",
+          "group": "FWD",
+          "x": 0.38,
+          "y": 0.16
+        },
+        {
+          "id": "ST2",
+          "group": "FWD",
+          "x": 0.62,
+          "y": 0.16
+        }
+      ]
+    },
+    {
+      "key": "3-4-3",
+      "label": "3-4-3",
+      "slots": [
+        {
+          "id": "GK",
+          "group": "GK",
+          "x": 0.5,
+          "y": 0.94
+        },
+        {
+          "id": "CB1",
+          "group": "DEF",
+          "x": 0.28,
+          "y": 0.78
+        },
+        {
+          "id": "CB2",
+          "group": "DEF",
+          "x": 0.5,
+          "y": 0.82
+        },
+        {
+          "id": "CB3",
+          "group": "DEF",
+          "x": 0.72,
+          "y": 0.78
+        },
+        {
+          "id": "LM",
+          "group": "MID",
+          "x": 0.1,
+          "y": 0.52
+        },
+        {
+          "id": "CM1",
+          "group": "MID",
+          "x": 0.38,
+          "y": 0.56
+        },
+        {
+          "id": "CM2",
+          "group": "MID",
+          "x": 0.62,
+          "y": 0.56
+        },
+        {
+          "id": "RM",
+          "group": "MID",
+          "x": 0.9,
+          "y": 0.52
+        },
+        {
+          "id": "LW",
+          "group": "FWD",
+          "x": 0.18,
+          "y": 0.2
+        },
+        {
+          "id": "ST",
+          "group": "FWD",
+          "x": 0.5,
+          "y": 0.14
+        },
+        {
+          "id": "RW",
+          "group": "FWD",
+          "x": 0.82,
+          "y": 0.2
+        }
+      ]
     }
   ],
-  "attribution": "데이터 출처: StatsBomb Open Data (비상업적 사용, 출처표기 조건 준수). mock 파일은 실데이터 아님.",
+  "attribution": "데이터 출처: StatsBomb Open Data (비상업적 사용, 출처표기 조건 준수 — StatsBomb Public Data User Agreement).",
   "minMinutesThreshold": 180,
-  "generatedAt": "2026-07-06T06:56:07.764Z"
+  "generatedAt": "2026-07-06T10:59:31.471Z"
 }

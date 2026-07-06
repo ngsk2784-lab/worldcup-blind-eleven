@@ -1,0 +1,113 @@
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 9, 13, 0.72);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: var(--sp-4);
+}
+
+.confirm-modal {
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface-2);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-2), var(--glow-soft);
+  padding: var(--sp-6);
+  text-align: center;
+}
+
+.confirm-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 32px;
+  color: var(--accent);
+  margin: 0 0 8px;
+}
+
+.confirm-sub {
+  color: var(--text-mid);
+  margin: 0 0 var(--sp-5);
+}
+
+.confirm-lineup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: var(--sp-4) 0;
+  border-top: 1px solid var(--surface-line);
+  border-bottom: 1px solid var(--surface-line);
+  margin-bottom: var(--sp-5);
+}
+
+.confirm-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 44px;
+}
+
+.confirm-avatar-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: var(--sp-4);
+  justify-content: center;
+}
+
+.confirm-btn-ghost {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: var(--r-md);
+  background: transparent;
+  border: 1px solid var(--surface-line);
+  color: var(--text-mid);
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.18s;
+}
+
+.confirm-btn-ghost:hover {
+  color: var(--text-hi);
+  border-color: var(--text-mid);
+}
+
+.confirm-btn-cta {
+  height: 48px;
+  padding: 0 24px;
+  border-radius: var(--r-md);
+  background: var(--accent);
+  border: none;
+  color: var(--text-onAccent);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--glow-soft);
+  transition: 0.18s;
+}
+
+.confirm-btn-cta:hover {
+  background: var(--accent-hi);
+}
+
+.confirm-attribution {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--sp-5);
+}
+
+@media (max-width: 600px) {
+  .confirm-modal {
+    padding: var(--sp-5);
+  }
+  .confirm-title {
+    font-size: 26px;
+  }
+}
