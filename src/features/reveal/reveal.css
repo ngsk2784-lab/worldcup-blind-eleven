@@ -35,7 +35,7 @@
 }
 
 .reveal-progress-n b {
-  font-size: 32px;
+  font-size: 56px;
   font-weight: 700;
   color: var(--accent);
   text-shadow: 0 0 20px rgba(232, 176, 75, 0.35);
@@ -228,9 +228,12 @@
   padding: 4px 10px;
 }
 
-/* 공개 뒷면 실제 스탯: 스파이더 레이더 + 핵심 수치 3개(§ 재작업 라운드1 #1) */
+/* 공개 뒷면 실제 스탯: 스파이더 레이더 + 핵심 수치 3개(§ 재작업 라운드1 #1)
+ * § 재작업 라운드3 #3: margin-top:auto가 배지-레이더 사이에 ~130px 빈 밴드를 만들어
+ * translateY로 14px 위로 당겨 간격을 좁힌다. */
 .rb-stats {
   margin-top: auto;
+  transform: translateY(-14px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -370,6 +373,6 @@
     font-size: 12px;
   }
   .reveal-progress-n b {
-    font-size: 26px;
+    font-size: 40px;
   }
 }

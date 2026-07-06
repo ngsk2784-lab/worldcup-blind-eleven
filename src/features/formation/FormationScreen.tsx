@@ -129,13 +129,20 @@ export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationSc
               onRemove={remove}
             />
           </div>
-          <div className="w-full shrink-0 rounded-xl border border-surface-line bg-surface-1 p-4 md:w-[340px] md:sticky md:top-[60px] md:h-[calc(100vh-80px)] md:overflow-hidden">
+          <div className="w-full shrink-0 rounded-xl border border-surface-line bg-surface-1 p-4 pb-14 md:w-[340px] md:sticky md:top-[60px] md:h-[calc(100vh-80px)] md:overflow-hidden md:pb-4">
             <CandidateTray pool={pool} placedIds={placedIds} />
           </div>
         </div>
+
+        {/* § 재작업 라운드3 #1: 모바일은 fixed 푸터가 트레이 카드 텍스트와 겹치는 문제가 있어,
+            정상 문서 흐름 맨 아래로 분리(겹침 원천 차단). 데스크탑은 아래 fixed 버전을 씀. */}
+        <div className="flex justify-center px-4 pb-4 md:hidden">
+          <Attribution />
+        </div>
       </div>
 
-      <div className="pointer-events-none fixed inset-x-0 bottom-2 z-10 flex justify-center md:justify-end md:px-8">
+      {/* § 재작업 라운드3 #2: 데스크탑은 트레이 패널(우측) 모서리와 겹치지 않도록 좌하단으로 이동 */}
+      <div className="pointer-events-none fixed inset-x-0 bottom-2 z-10 hidden md:flex md:justify-start md:pl-8">
         <Attribution />
       </div>
 
