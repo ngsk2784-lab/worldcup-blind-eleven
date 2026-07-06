@@ -1,0 +1,105 @@
+=== npm run typecheck ===
+
+> data-pipeline@0.0.0 typecheck
+> tsc --noEmit
+
+
+=== npm run fetch -- 106 3 (cache 이미 존재, 재실행 로그) ===
+(1차 실행 로그는 이 문서 하단 fetch 섹션 참고. 캐시 존재시 즉시 스킵됨)
+
+=== npm run build:data -- 2022 2018 ===
+
+> data-pipeline@0.0.0 build:data
+> tsx src/emit.ts 2022 2018
+
+[emit] 2022 (season 106) aggregate 시작...
+  [aggregate] season 106: 16/64경기 처리
+  [aggregate] season 106: 32/64경기 처리
+  [aggregate] season 106: 48/64경기 처리
+  [aggregate] season 106: 64/64경기 처리
+[emit] 2022: raw 선수 680명, 경기 64개
+[emit] 2022: minMinutes(180) 통과 346명
+[emit] 2022: 큐레이션 56명
+[emit] 2022: players.2022.json 저장 (56명)
+[emit] 2018 (season 3) aggregate 시작...
+  [aggregate] season 3: 16/64경기 처리
+  [aggregate] season 3: 32/64경기 처리
+  [aggregate] season 3: 48/64경기 처리
+  [aggregate] season 3: 64/64경기 처리
+[emit] 2018: raw 선수 604명, 경기 64개
+[emit] 2018: minMinutes(180) 통과 350명
+[emit] 2018: 큐레이션 56명
+[emit] 2018: players.2018.json 저장 (56명)
+[emit] meta.json 저장 (2022, 2018)
+
+=== npm run verify -- 2022 2018 (sanity check) ===
+
+> data-pipeline@0.0.0 verify
+> tsx src/verify.ts 2022 2018
+
+
+=== 2022 (players.2022.json, 56명) ===
+  [PASS] 스키마 무결성(spider/scoring 0~100, heatmap 길이, reveal 필드) — 위반 0건
+  [PASS] 전원 minMinutesThreshold(180분) 이상
+  [PASS] 큐레이션 인원 40~60명 범위 (실제 56)
+  [PASS] GK 최소 4명 이상 확보 (실제 6명)
+  [PASS] DEF 최소 4명 이상 확보 (실제 18명)
+  [PASS] MID 최소 4명 이상 확보 (실제 18명)
+  [PASS] FWD 최소 4명 이상 확보 (실제 14명)
+  FWD attack축 상위 5명:
+    1. Kylian Mbappé Lottin (France) attack=100 stat=67
+    2. Lionel Andrés Messi Cuccittini (Argentina) attack=97 stat=74
+    3. Salem Mohammed Al Dawsari (Saudi Arabia) attack=80 stat=69
+    4. Bukayo Saka (England) attack=75 stat=67
+    5. Mohammed Kudus (Ghana) attack=71 stat=71
+  [PASS] Messi가 큐레이션 풀에 포함됨
+  [PASS] Mbappé가 큐레이션 풀에 포함됨
+  [PASS] Messi positionGroup === FWD (실제 FWD)
+  [PASS] Messi attack축 percentile >= 80 (실제 97, FWD 내 2/14위)
+  [PASS] Messi teamResult.furthestRound === Winner (실제 Winner)
+  [PASS] Mbappé attack축 percentile >= 80 (실제 100, FWD 내 1/14위)
+  [PASS] Mbappé teamResult.furthestRound === Final (실제 Final)
+  GK 전원 (선방/실점/출전분):
+    Vanja Milinković Savić (Serbia) 선방=16 실점=8 출전분=294
+    Francisco Guillermo Ochoa Magaña (Mexico) 선방=3 실점=3 출전분=292
+    Mathew Ryan (Australia) 선방=13 실점=6 출전분=387
+    Thibaut Courtois (Belgium) 선방=9 실점=2 출전분=284
+    Manuel Neuer (Germany) 선방=7 실점=4 출전분=294
+    Milan Borjan (Canada) 선방=8 실점=7 출전분=285
+  [PASS] 모든 GK의 선방 수치 >= 0 (음수/누락 없음)
+  [PASS] 적어도 한 명 이상 GK가 선방 기록 보유
+
+=== 2018 (players.2018.json, 56명) ===
+  [PASS] 스키마 무결성(spider/scoring 0~100, heatmap 길이, reveal 필드) — 위반 0건
+  [PASS] 전원 minMinutesThreshold(180분) 이상
+  [PASS] 큐레이션 인원 40~60명 범위 (실제 56)
+  [PASS] GK 최소 4명 이상 확보 (실제 6명)
+  [PASS] DEF 최소 4명 이상 확보 (실제 18명)
+  [PASS] MID 최소 4명 이상 확보 (실제 18명)
+  [PASS] FWD 최소 4명 이상 확보 (실제 14명)
+  FWD attack축 상위 5명:
+    1. Neymar da Silva Santos Junior (Brazil) attack=93 stat=79
+    2. Heung-Min Son (South Korea) attack=87 stat=63
+    3. Eden Hazard (Belgium) attack=81 stat=80
+    4. Marcus Rashford (England) attack=74 stat=72
+    5. Kylian Mbappé Lottin (France) attack=71 stat=63
+  GK 전원 (선방/실점/출전분):
+    Mathew Ryan (Australia) 선방=8 실점=4 출전분=283
+    Manuel Neuer (Germany) 선방=11 실점=4 출전분=290
+    Thibaut Courtois (Belgium) 선방=25 실점=6 출전분=660
+    Jordan Pickford (England) 선방=17 실점=11 출전분=722
+    Keylor Navas Gamboa (Costa Rica) 선방=9 실점=5 출전분=291
+    Yann Sommer (Switzerland) 선방=12 실점=4 출전분=384
+  [PASS] 모든 GK의 선방 수치 >= 0 (음수/누락 없음)
+  [PASS] 적어도 한 명 이상 GK가 선방 기록 보유
+
+=== meta.json ===
+  [PASS] 모든 formation이 11슬롯
+  [PASS] meta.tournaments에 대회 정보 존재 (2022,2018)
+
+총 PASS (실패 0건)
+
+=== 산출 파일 크기 (gzip) ===
+players.2022.json: raw=58647B gzip=11874B
+players.2018.json: raw=58456B gzip=11668B
+meta.json: raw=4615B gzip=758B
