@@ -1,0 +1,17 @@
+{
+  "name": "data-pipeline",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "StatsBomb raw JSON -> src/data/*.json 정적 산출 (빌드 전용, 앱 런타임과 분리)",
+  "scripts": {
+    "build:data": "tsx src/emit.ts",
+    "fetch": "tsx src/fetch.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.2",
+    "tsx": "^4.19.2",
+    "typescript": "~5.7.3"
+  }
+}

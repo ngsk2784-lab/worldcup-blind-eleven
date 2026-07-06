@@ -1,0 +1,104 @@
+{
+  "tournaments": [
+    {
+      "year": 2022,
+      "playerCount": 18,
+      "label": "2022 카타르 월드컵 (mock)"
+    }
+  ],
+  "positionGroups": [
+    {
+      "key": "GK",
+      "label": "골키퍼"
+    },
+    {
+      "key": "DEF",
+      "label": "수비수"
+    },
+    {
+      "key": "MID",
+      "label": "미드필더"
+    },
+    {
+      "key": "FWD",
+      "label": "공격수"
+    }
+  ],
+  "formations": [
+    {
+      "key": "4-3-3",
+      "label": "4-3-3",
+      "slots": [
+        {
+          "id": "GK",
+          "group": "GK",
+          "x": 0.5,
+          "y": 0.94
+        },
+        {
+          "id": "LB",
+          "group": "DEF",
+          "x": 0.12,
+          "y": 0.74
+        },
+        {
+          "id": "CB1",
+          "group": "DEF",
+          "x": 0.36,
+          "y": 0.8
+        },
+        {
+          "id": "CB2",
+          "group": "DEF",
+          "x": 0.64,
+          "y": 0.8
+        },
+        {
+          "id": "RB",
+          "group": "DEF",
+          "x": 0.88,
+          "y": 0.74
+        },
+        {
+          "id": "CM1",
+          "group": "MID",
+          "x": 0.28,
+          "y": 0.52
+        },
+        {
+          "id": "CM2",
+          "group": "MID",
+          "x": 0.5,
+          "y": 0.58
+        },
+        {
+          "id": "CM3",
+          "group": "MID",
+          "x": 0.72,
+          "y": 0.52
+        },
+        {
+          "id": "LW",
+          "group": "FWD",
+          "x": 0.15,
+          "y": 0.22
+        },
+        {
+          "id": "ST",
+          "group": "FWD",
+          "x": 0.5,
+          "y": 0.14
+        },
+        {
+          "id": "RW",
+          "group": "FWD",
+          "x": 0.85,
+          "y": 0.22
+        }
+      ]
+    }
+  ],
+  "attribution": "데이터 출처: StatsBomb Open Data (비상업적 사용, 출처표기 조건 준수). mock 파일은 실데이터 아님.",
+  "minMinutesThreshold": 180,
+  "generatedAt": "2026-07-06T06:56:07.764Z"
+}
