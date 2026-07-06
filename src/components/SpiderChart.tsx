@@ -34,6 +34,8 @@ export interface SpiderChartProps {
   compareAxes?: SpiderAxes
   compareColor?: string
   showLabels?: boolean
+  /** 정체공개 뒷면 "고스트" 미니차트처럼 옅게 표시(포인트 도트 생략) */
+  faded?: boolean
 }
 
 export const SpiderChart = memo(function SpiderChart({
@@ -43,6 +45,7 @@ export const SpiderChart = memo(function SpiderChart({
   compareAxes,
   compareColor = 'var(--accent)',
   showLabels = false,
+  faded = false,
 }: SpiderChartProps) {
   const cx = size / 2
   const cy = size / 2
@@ -50,7 +53,14 @@ export const SpiderChart = memo(function SpiderChart({
   const values = AXES.map((a) => axes[a.key])
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="스탯 스파이더 차트">
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      opacity={faded ? 0.35 : 1}
+      role="img"
+      aria-label="스탯 스파이더 차트"
+    >
       {[0.4, 0.7, 1].map((f, idx) => {
         const d =
           AXES.map((_, i) => {
@@ -78,10 +88,11 @@ export const SpiderChart = memo(function SpiderChart({
         />
       )}
       <path d={polygonPath(values, R, cx, cy)} fill={color} fillOpacity={0.18} stroke={color} strokeWidth={1.6} />
-      {values.map((v, i) => {
-        const [x, y] = point(i, (R * Math.max(0, Math.min(100, v))) / 100, cx, cy)
-        return <circle key={i} cx={x} cy={y} r={2.4} fill={color} />
-      })}
+      {!faded &&
+        values.map((v, i) => {
+          const [x, y] = point(i, (R * Math.max(0, Math.min(100, v))) / 100, cx, cy)
+          return <circle key={i} cx={x} cy={y} r={2.4} fill={color} />
+        })}
       {showLabels &&
         AXES.map((a, i) => {
           const [x, y] = point(i, R + 16, cx, cy)

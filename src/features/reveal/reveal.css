@@ -1,0 +1,308 @@
+.reveal-screen {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--sp-6) var(--sp-5) var(--sp-8);
+  overflow: hidden;
+  background: var(--bg-vignette);
+}
+
+.reveal-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle 340px at 50% 42%, rgba(232, 176, 75, 0.14) 0%, rgba(232, 176, 75, 0.05) 40%, transparent 70%);
+  pointer-events: none;
+}
+
+.reveal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: var(--sp-6);
+  z-index: 1;
+}
+
+.reveal-progress-n {
+  font-family: var(--font-mono);
+  color: var(--text-mid);
+  font-size: 14px;
+}
+
+.reveal-stage {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.reveal-stage-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+  width: 100%;
+}
+
+.reveal-card-punch,
+.reveal-card-glow,
+.reveal-card-flip {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.reveal-card-glow {
+  border-radius: var(--r-xl);
+}
+
+/* perspective는 회전하는 요소 자신이 아니라 부모에 걸어야 3D 깊이감이 렌더링된다
+   (자신에게 걸면 자신의 transform엔 영향이 없다 — CSS 스펙). */
+.reveal-card-flip {
+  perspective: 1200px;
+}
+
+.reveal-card-3d {
+  position: relative;
+  width: 300px;
+  height: 400px;
+}
+
+.reveal-face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  backface-visibility: hidden;
+  box-shadow: var(--sh-2);
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+}
+
+.reveal-face-front {
+  background: var(--surface-2);
+  border-left: 4px solid var(--pos-def);
+}
+
+.reveal-face-back {
+  transform: rotateY(180deg);
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+}
+
+.rf-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 4px;
+}
+
+.rf-ribbon {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.rf-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 4px 0 8px;
+}
+
+.rf-code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-mid);
+  margin-top: 2px;
+  letter-spacing: 0.05em;
+}
+
+.rf-mid {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.rf-keystats {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px 8px;
+  border-top: 1px solid var(--surface-line);
+  padding-top: 8px;
+}
+
+.ks-l {
+  font-size: 10px;
+  color: var(--text-lo);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ks-v {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-hi);
+  line-height: 1;
+}
+
+.ks-v span {
+  font-size: 10px;
+  color: var(--text-mid);
+  font-weight: 500;
+}
+
+.rb-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.rb-jersey {
+  font-family: var(--font-mono);
+  color: var(--text-mid);
+  font-size: 14px;
+}
+
+.rb-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--text-hi);
+  line-height: 1.05;
+  margin-top: 6px;
+}
+
+.rb-sub {
+  font-size: 13px;
+  color: var(--text-mid);
+}
+
+.rb-result {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--accent);
+  border: 1px solid;
+  border-radius: var(--r-pill);
+  padding: 4px 10px;
+}
+
+.rb-epithet {
+  font-style: italic;
+  color: var(--text-hi);
+  font-size: 14px;
+  margin-top: 8px;
+  max-width: 90%;
+}
+
+.rb-ghost {
+  margin-top: auto;
+  opacity: 0.6;
+}
+
+.reveal-caption {
+  text-align: center;
+  max-width: 420px;
+}
+
+.reveal-caption-text {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(22px, 3vw, 32px);
+  color: var(--accent);
+  margin-top: 2px;
+}
+
+.reveal-progress-strip {
+  display: flex;
+  gap: 8px;
+  margin-top: var(--sp-7);
+  z-index: 1;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.reveal-chip {
+  width: 22px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--surface-line);
+  transition: background 0.3s;
+}
+
+.reveal-chip.on {
+  background: var(--accent);
+}
+
+.reveal-controls {
+  display: flex;
+  gap: var(--sp-4);
+  margin-top: var(--sp-5);
+  z-index: 1;
+}
+
+.reveal-btn {
+  height: 44px;
+  padding: 0 20px;
+  border-radius: var(--r-md);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.18s;
+  border: 1px solid var(--surface-line);
+  background: transparent;
+  color: var(--text-mid);
+}
+
+.reveal-btn:hover {
+  color: var(--text-hi);
+  border-color: var(--text-mid);
+}
+
+.reveal-cta {
+  height: 56px;
+  padding: 0 var(--sp-6);
+  border-radius: var(--r-md);
+  border: none;
+  background: var(--accent);
+  color: var(--text-onAccent);
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: var(--glow-soft);
+  z-index: 1;
+  margin-top: var(--sp-6);
+}
+
+.reveal-cta:hover {
+  background: var(--accent-hi);
+}
+
+@media (max-width: 600px) {
+  .reveal-stage {
+    max-width: 92vw;
+    min-height: 480px;
+  }
+  .reveal-card-3d {
+    width: 240px;
+    height: 320px;
+  }
+  .reveal-face {
+    padding: var(--sp-3);
+  }
+  .rb-name {
+    font-size: 22px;
+  }
+}

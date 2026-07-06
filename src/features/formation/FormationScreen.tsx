@@ -21,16 +21,17 @@ import { anonCode } from '../cards/PlayerCardTile'
 
 export interface FormationScreenProps {
   onGoToExplore: () => void
+  /** 11/11 완료 후 "정체 공개" CTA 클릭 시 호출 — 상위(App)가 확정 브레이크(S3) 모달을 띄운다. */
+  onConfirmRequest: () => void
 }
 
-export function FormationScreen({ onGoToExplore }: FormationScreenProps) {
+export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationScreenProps) {
   const pool = useGameStore((s) => s.pool)
   const slots = useGameStore((s) => s.slots)
   const formationKey = useGameStore((s) => s.formationKey)
   const place = useGameStore((s) => s.place)
   const remove = useGameStore((s) => s.remove)
   const isComplete = useGameStore((s) => s.isComplete)
-  const confirmXI = useGameStore((s) => s.confirmXI)
 
   const formation = useMemo(() => getFormationDef(formationKey), [formationKey])
   const placedCount = Object.values(slots).filter(Boolean).length
@@ -102,7 +103,7 @@ export function FormationScreen({ onGoToExplore }: FormationScreenProps) {
             key={String(complete)}
             type="button"
             disabled={!complete}
-            onClick={() => confirmXI()}
+            onClick={onConfirmRequest}
             animate={complete ? { boxShadow: ['0 0 0 rgba(0,0,0,0)', 'var(--glow-accent)', 'var(--glow-soft)'] } : {}}
             transition={{ duration: 0.3 }}
             className="ml-auto rounded-md px-5 py-2 text-[14px] font-semibold transition-colors"

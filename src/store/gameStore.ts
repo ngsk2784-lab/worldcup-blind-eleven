@@ -1,9 +1,9 @@
 import { create } from 'zustand'
 import type { FinalXIEntry, GamePhase, GameStore, Meta, PlayerCard, XIScore } from '../types'
-import playersMockRaw from '../data/players.mock.json'
+import players2022Raw from '../data/players.2022.json'
 import metaRaw from '../data/meta.json'
 
-const players = playersMockRaw as unknown as PlayerCard[]
+const players = players2022Raw as unknown as PlayerCard[]
 const meta = metaRaw as unknown as Meta
 
 function getFormation(formationKey: string) {
@@ -39,7 +39,7 @@ export interface InternalGameStore extends GameStore {
 }
 
 export const useGameStore = create<InternalGameStore>((set, get) => ({
-  phase: 'explore',
+  phase: 'onboarding',
   tournament: 2022,
   pool: players,
   formationKey: DEFAULT_FORMATION,
