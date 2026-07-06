@@ -7,6 +7,7 @@
   "scripts": {
     "build:data": "tsx src/emit.ts",
     "fetch": "tsx src/fetch.ts",
+    "verify": "tsx src/verify.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
