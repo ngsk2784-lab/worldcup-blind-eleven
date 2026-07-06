@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import type { PositionGroup } from '../../types'
 import { useGameStore } from '../../store/gameStore'
+import { Attribution } from '../../components/Attribution'
 import { PlayerCardTile } from './PlayerCardTile'
 import { FilterChips } from './FilterChips'
 import { DetailPanel } from './DetailPanel'
@@ -129,6 +130,7 @@ export function ExploreScreen({ onGoToFormation }: ExploreScreenProps) {
           ))}
         </div>
         <span className="hidden text-[13px] text-text-mid sm:inline">라인업 {placedCount} / 11</span>
+        <Attribution className="explore-footer-attribution" />
         <button
           type="button"
           onClick={onGoToFormation}

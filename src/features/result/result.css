@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: var(--sp-7) var(--sp-5) var(--sp-8);
+  padding: var(--sp-6) var(--sp-5) var(--sp-6);
   max-width: var(--content-max);
   margin: 0 auto;
   text-align: center;
@@ -45,7 +45,7 @@
 
 .result-comment {
   color: var(--text-mid);
-  margin: var(--sp-2) 0 var(--sp-7);
+  margin: var(--sp-2) 0 var(--sp-6);
 }
 
 .result-picks {
@@ -54,7 +54,7 @@
   gap: var(--sp-4);
   width: 100%;
   max-width: 720px;
-  margin-bottom: var(--sp-7);
+  margin-bottom: var(--sp-6);
 }
 
 .result-pick-card {
@@ -93,41 +93,57 @@
 
 .result-xi-board {
   width: 100%;
-  max-width: 560px;
-  margin-bottom: var(--sp-7);
+  max-width: 420px;
+  margin-bottom: var(--sp-6);
 }
 
 .result-pitch {
   position: relative;
   width: 100%;
   aspect-ratio: 4/5;
-  background: var(--bg-pitch);
+  background: linear-gradient(180deg, rgba(79, 195, 217, 0.05), transparent 40%), var(--bg-pitch);
   border: 1px solid var(--surface-line);
   border-radius: var(--r-lg);
   margin-top: var(--sp-3);
+  overflow: hidden;
 }
 
-.result-pitch-dot {
+/* 포지션색 원형 배지 + 등번호(§ 재작업 라운드1 #3) */
+.result-pitch-badge {
   position: absolute;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.result-pitch-circle {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  border: 2px solid;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  box-shadow: var(--sh-1);
 }
 
 .result-pitch-label {
-  position: absolute;
-  top: 16px;
   font-size: 10px;
   white-space: nowrap;
   color: var(--text-mid);
+  max-width: 72px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .result-contrast {
-  margin-bottom: var(--sp-7);
+  margin-bottom: var(--sp-6);
 }
 
 .result-contrast-chips {

@@ -30,6 +30,8 @@ export function CandidateCard({ player, dragId }: CandidateCardProps) {
       {...attributes}
       role="button"
       tabIndex={0}
+      data-player-id={player.id}
+      data-position-group={player.positionGroup}
       aria-label={`${anonCode(player)} 드래그하여 슬롯에 배치`}
       className="flex cursor-grab touch-none items-center gap-3 rounded-md border-l-4 bg-surface-2 p-2.5 shadow-1 transition-opacity active:cursor-grabbing"
       style={{ borderLeftColor: color, opacity: isDragging ? 0.35 : 1 }}

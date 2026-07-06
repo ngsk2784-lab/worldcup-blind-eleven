@@ -1,0 +1,25 @@
+[e2e-neg] 대상: http://localhost:5190
+[e2e-neg] S0 -> S1 -> S2 진입 완료
+[e2e-neg] ✅ PASS: 테스트1: GK 카드를 DEF 슬롯에 드롭 -> 경고 토스트 노출
+[e2e-neg] ✅ PASS: 테스트1: DEF 슬롯은 여전히 비어있음(거부됨)
+[e2e-neg] ✅ PASS: 테스트1: GK 후보는 트레이에 그대로 남아있음(배치 안 됨)
+[e2e-neg] ✅ PASS: 테스트2: 0/11 상태에서 "정체 공개" CTA는 disabled
+[e2e-neg] ✅ PASS: 테스트2 사전조건: GK 슬롯 정상 배치 확인
+[e2e-neg] ✅ PASS: 테스트2: 1/11 상태에서도 "정체 공개" CTA는 여전히 disabled
+[e2e-neg] ✅ PASS: 테스트3 사전조건: store 훅 접근 가능 (ok)
+[e2e-neg] ✅ PASS: 테스트3: 같은 선수를 CB2에 재배치하면 원래 슬롯(CB1)은 비워짐
+[e2e-neg] ✅ PASS: 테스트3: 새 슬롯(CB2)에 정상 배치됨
+[e2e-neg] ✅ PASS: 테스트4: 필드 밖 드롭 후 배치된 슬롯 수 변화 없음(no-op)
+[e2e-neg] ✅ PASS: 테스트4: 드래그한 카드는 제자리(트레이)로 복귀
+[e2e-neg] ✅ PASS: 테스트4 부가: 콘솔/페이지 에러 없음 (발견: 0건)
+[e2e-neg] ✅ PASS: 테스트6 사전조건: store 훅으로 11/11 배치 완료 (11명)
+[e2e-neg] ✅ PASS: 테스트6 사전조건: Reveal(S4) 화면 진입
+[e2e-neg] ✅ PASS: 테스트6: 연타 후에도 정상적으로 Result(S5) 화면 도달(중복 전환/크래시 없음)
+[e2e-neg] ✅ PASS: 테스트6: Result 화면이 중복 렌더되지 않음
+[e2e-neg] ✅ PASS: 테스트6 부가: 연타 이후에도 콘솔/페이지 에러 없음 (누적 0건)
+[e2e-neg] 누적 콘솔/페이지 에러 없음
+[e2e-neg] 모바일 390: S0 -> S1 -> S2 진입 완료
+[e2e-neg] ✅ PASS: 테스트5: 모바일 390 실제 터치(CDP) 드래그로 GK 슬롯 배치 성공
+[e2e-neg]   모바일 배치 카운트 표시: 1/11
+[e2e-neg] ==============================
+[e2e-neg] 전체 부정경로 테스트 통과 (FAIL 0건)

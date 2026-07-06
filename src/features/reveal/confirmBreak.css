@@ -97,6 +97,12 @@
   background: var(--accent-hi);
 }
 
+.confirm-attribution {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--sp-5);
+}
+
 @media (max-width: 600px) {
   .confirm-modal {
     padding: var(--sp-5);

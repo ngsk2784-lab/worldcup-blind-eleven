@@ -17,6 +17,7 @@ import { getFormationDef } from '../../store/gameStore'
 import { FormationBoard } from './FormationBoard'
 import { CandidateTray } from './CandidateTray'
 import { Silhouette } from '../../components/Silhouette'
+import { Attribution } from '../../components/Attribution'
 import { anonCode } from '../cards/PlayerCardTile'
 
 export interface FormationScreenProps {
@@ -117,8 +118,8 @@ export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationSc
           </motion.button>
         </header>
 
-        <div className="mx-auto flex max-w-[var(--content-max)] flex-col gap-6 px-4 py-7 md:flex-row md:px-6">
-          <div className="min-w-0 flex-1">
+        <div className="mx-auto flex max-w-[var(--content-max)] flex-col gap-6 px-4 py-7 md:flex-row md:items-start md:px-6">
+          <div className="min-w-0 flex-1 md:sticky md:top-[60px]">
             <FormationBoard
               formation={formation}
               slots={slots}
@@ -128,10 +129,14 @@ export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationSc
               onRemove={remove}
             />
           </div>
-          <div className="w-full shrink-0 rounded-xl border border-surface-line bg-surface-1 p-4 md:w-[340px]">
+          <div className="w-full shrink-0 rounded-xl border border-surface-line bg-surface-1 p-4 md:w-[340px] md:sticky md:top-[60px] md:h-[calc(100vh-80px)] md:overflow-hidden">
             <CandidateTray pool={pool} placedIds={placedIds} />
           </div>
         </div>
+      </div>
+
+      <div className="pointer-events-none fixed inset-x-0 bottom-2 z-10 flex justify-center md:justify-end md:px-8">
+        <Attribution />
       </div>
 
       <DragOverlay>

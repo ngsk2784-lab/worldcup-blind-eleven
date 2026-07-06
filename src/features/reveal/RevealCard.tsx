@@ -12,6 +12,7 @@ import './reveal.css';
 export type CardStage = 'enter' | 'hold' | 'flip' | 'impact' | 'narrative' | 'exit' | 'silence';
 
 const EASE_INOUT: [number, number, number, number] = [0.65, 0, 0.35, 1];
+const EASE_SNAP: [number, number, number, number] = [0.34, 1.56, 0.64, 1];
 
 // 주의: `filter`는 `transform-style: preserve-3d`를 쓰는 바로 그 요소에 걸면
 // 크롬 계열 브라우저가 3D 합성을 깨뜨려(자식이 평면화) 플립이 거울상으로 보이는
@@ -34,6 +35,12 @@ const brightnessVariants = {
 const holdFloat = {
   idle: { y: 0 },
   floating: { y: [0, -2, 0, 2, 0], transition: { duration: 0.5, ease: 'easeInOut' as const } },
+};
+
+// 실명 등장: scale 0.9->1 + fade (§ 재작업 라운드1 #1)
+const nameVariants = {
+  hidden: { scale: 0.9, opacity: 0 },
+  shown: { scale: 1, opacity: 1, transition: { duration: 0.35, ease: EASE_SNAP } },
 };
 
 function flipTargetFor(stage: CardStage): keyof typeof rotateVariants {
@@ -127,18 +134,37 @@ export function RevealCard({
                   <Flag country={player.reveal.country} />
                   {player.reveal.jerseyNumber != null && <span className="rb-jersey">#{player.reveal.jerseyNumber}</span>}
                 </div>
-                <div className="rb-name">{shortName}</div>
+                <motion.div className="rb-name" variants={nameVariants} animate={showBack ? 'shown' : 'hidden'}>
+                  {shortName}
+                </motion.div>
                 <div className="rb-sub">
                   {player.reveal.country} · {player.positionGroup}
                 </div>
-                <div className="rb-result" style={{ borderColor: color }}>
+                <div className="rb-result" style={{ borderColor: color, color }}>
                   🏆 {slot.id} · {player.reveal.teamResult.furthestRound}
                 </div>
-                {player.reveal.epithet && <div className="rb-epithet">"{player.reveal.epithet}"</div>}
-                <div className="rb-ghost">
-                  <SpiderChart axes={player.spider} size={72} faded />
+                <div className="rb-stats">
+                  <SpiderChart axes={player.spider} size={104} color={color} />
+                  <div className="rb-keystats">
+                    {player.keyStats.slice(0, 3).map((ks) => (
+                      <div key={ks.label}>
+                        <div className="ks-l">{ks.label}</div>
+                        <div className="ks-v">
+                          {ks.value}
+                          {ks.unit && <span> {ks.unit}</span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
+
+              {/* 임팩트 순간 골드 플래시(§ 재작업 라운드1 #1) — 대칭 그라데이션이라 3D 회전 중에도 미러링 아티팩트 없음 */}
+              <motion.div
+                className="reveal-flash"
+                animate={stage === 'impact' ? { opacity: [0, 0.7, 0] } : { opacity: 0 }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
+              />
             </motion.div>
           </motion.div>
         </motion.div>

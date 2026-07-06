@@ -112,6 +112,39 @@ body {
   color: var(--text-lo);
 }
 
+/* 공통 어트리뷰션(StatsBomb) — 전 화면 상시 노출, 작게 */
+.attribution {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--text-lo);
+  white-space: nowrap;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.attribution-logo {
+  height: 13px;
+  width: auto;
+  display: block;
+}
+
+/* 탐색화면(S1) 하단바 전용 어트리뷰션 반응형 숨김.
+ * § 재작업 라운드1 #8 e2e에서 발견: `.attribution`(display:inline-flex, 여기 위에 정의)이
+ * 유틸리티 레이어(@tailwind utilities) 이후 소스 순서라 Tailwind의 `hidden` 유틸과
+ * 동일 specificity(0,1,0)에서 항상 이겨버려, 모바일에서 "숨김" 처리가 안 되고 CTA 버튼
+ * 클릭을 가로채는 버그가 있었다. 클래스 2개 조합으로 specificity(0,2,0)를 올려 확실히 이기게 한다. */
+.attribution.explore-footer-attribution {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .attribution.explore-footer-attribution {
+    display: inline-flex;
+  }
+}
+
 button {
   font-family: var(--font-body);
 }

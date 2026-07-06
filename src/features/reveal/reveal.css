@@ -21,15 +21,31 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   margin-bottom: var(--sp-6);
   z-index: 1;
 }
 
+/* 상단 대형 골드 카운터(§ 재작업 라운드1 #1) */
 .reveal-progress-n {
   font-family: var(--font-mono);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.reveal-progress-n b {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--accent);
+  text-shadow: 0 0 20px rgba(232, 176, 75, 0.35);
+  line-height: 1;
+}
+
+.reveal-progress-n i {
+  font-style: normal;
+  font-size: 16px;
   color: var(--text-mid);
-  font-size: 14px;
 }
 
 .reveal-stage {
@@ -41,6 +57,19 @@
   align-items: center;
   justify-content: center;
   z-index: 1;
+}
+
+/* 카드 뒤 방사형 골드 글로우 ~600px(§ 재작업 라운드1 #1) */
+.reveal-glow-aura {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(232, 176, 75, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
 }
 
 .reveal-stage-inner {
@@ -179,10 +208,11 @@
 .rb-name {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 28px;
+  font-size: 26px;
   color: var(--text-hi);
   line-height: 1.05;
   margin-top: 6px;
+  text-shadow: 0 0 24px rgba(232, 176, 75, 0.35);
 }
 
 .rb-sub {
@@ -193,23 +223,38 @@
 .rb-result {
   margin-top: 8px;
   font-size: 12px;
-  color: var(--accent);
   border: 1px solid;
   border-radius: var(--r-pill);
   padding: 4px 10px;
 }
 
-.rb-epithet {
-  font-style: italic;
-  color: var(--text-hi);
-  font-size: 14px;
-  margin-top: 8px;
-  max-width: 90%;
+/* 공개 뒷면 실제 스탯: 스파이더 레이더 + 핵심 수치 3개(§ 재작업 라운드1 #1) */
+.rb-stats {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
 }
 
-.rb-ghost {
-  margin-top: auto;
-  opacity: 0.6;
+.rb-keystats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px 10px;
+  width: 100%;
+  border-top: 1px solid var(--surface-line);
+  padding-top: 6px;
+  text-align: center;
+}
+
+/* 임팩트 골드 플래시 */
+.reveal-flash {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  background: radial-gradient(circle, rgba(246, 199, 102, 0.95) 0%, rgba(232, 176, 75, 0.45) 45%, transparent 75%);
+  pointer-events: none;
 }
 
 .reveal-caption {
@@ -290,10 +335,19 @@
   background: var(--accent-hi);
 }
 
+.reveal-attribution {
+  margin-top: var(--sp-6);
+  z-index: 1;
+}
+
 @media (max-width: 600px) {
   .reveal-stage {
     max-width: 92vw;
     min-height: 480px;
+  }
+  .reveal-glow-aura {
+    width: 420px;
+    height: 420px;
   }
   .reveal-card-3d {
     width: 240px;
@@ -303,6 +357,19 @@
     padding: var(--sp-3);
   }
   .rb-name {
-    font-size: 22px;
+    font-size: 20px;
+  }
+  .rb-stats svg {
+    width: 76px;
+    height: 76px;
+  }
+  .ks-l {
+    font-size: 9px;
+  }
+  .ks-v {
+    font-size: 12px;
+  }
+  .reveal-progress-n b {
+    font-size: 26px;
   }
 }

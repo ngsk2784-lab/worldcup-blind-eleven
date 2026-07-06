@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { FinalXIEntry } from '../../types';
+import { Attribution } from '../../components/Attribution';
 import { buildRevealOrder } from './revealOrder';
 import { RevealCard, type CardStage } from './RevealCard';
 import './reveal.css';
@@ -93,11 +94,13 @@ export function Reveal({ finalXI, onFinish }: { finalXI: FinalXIEntry[]; onFinis
       <div className="reveal-header">
         <span className="overline">정체 공개</span>
         <span className="reveal-progress-n">
-          {index + 1} / {order.length}
+          <b>{index + 1}</b>
+          <i>/ {order.length}</i>
         </span>
       </div>
 
       <div className="reveal-stage">
+        <div className="reveal-glow-aura" aria-hidden="true" />
         <AnimatePresence mode="wait">
           <motion.div
             key={current.entry.player.id}
@@ -138,6 +141,8 @@ export function Reveal({ finalXI, onFinish }: { finalXI: FinalXIEntry[]; onFinis
           결과 보기 ▶
         </motion.button>
       )}
+
+      <Attribution className="reveal-attribution" />
     </div>
   );
 }

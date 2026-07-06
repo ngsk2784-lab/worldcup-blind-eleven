@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Silhouette } from '../../components/Silhouette';
+import { Attribution } from '../../components/Attribution';
+import { useGameStore, gameMeta } from '../../store/gameStore';
 import type { PositionGroup } from '../../types';
 import './onboarding.css';
 
@@ -14,6 +16,8 @@ const FAN_CARDS: { rotate: number; group: PositionGroup }[] = [
 
 export function Onboarding({ onStart }: { onStart: () => void }) {
   const [parallax, setParallax] = useState({ x: 0, y: 0 });
+  const tournament = useGameStore((s) => s.tournament);
+  const setTournament = useGameStore((s) => s.setTournament);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -69,9 +73,22 @@ export function Onboarding({ onStart }: { onStart: () => void }) {
         스카우팅 시작 ▶
       </button>
 
-      <div className="onboarding-chip">2022 카타르 · 4-3-3 (기본)</div>
+      <div className="onboarding-chips" role="group" aria-label="대회 선택">
+        {gameMeta.tournaments.map((t) => (
+          <button
+            key={t.year}
+            type="button"
+            className={`onboarding-chip-btn${tournament === t.year ? ' active' : ''}`}
+            aria-pressed={tournament === t.year}
+            onClick={() => setTournament(t.year as 2018 | 2022)}
+          >
+            {t.label}
+          </button>
+        ))}
+        <span className="onboarding-chip-formation">4-3-3 (기본)</span>
+      </div>
 
-      <div className="onboarding-caption">데이터: StatsBomb Open Data</div>
+      <Attribution className="onboarding-caption" />
     </div>
   );
 }

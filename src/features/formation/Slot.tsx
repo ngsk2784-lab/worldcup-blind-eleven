@@ -25,29 +25,41 @@ export function Slot({ slot, player, activeDragGroup, shaking, onRemove }: SlotP
   const isInvalidTarget = activeDragGroup !== null && activeDragGroup !== slot.group
 
   return (
-    <motion.div
-      ref={setNodeRef}
-      className="absolute flex h-18 w-18 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full"
-      style={{
-        left: `${slot.x * 100}%`,
-        top: `${slot.y * 100}%`,
-        border: player ? 'none' : `2px dashed ${isInvalidTarget && isOver ? 'var(--error)' : color}`,
-        backgroundColor: player ? 'transparent' : `${color}1f`,
-        boxShadow: isValidTarget && isOver ? `0 0 0 2px ${color}` : undefined,
-        filter: isInvalidTarget && isOver ? 'brightness(0.75)' : undefined,
-      }}
-      animate={shaking ? { x: [0, -6, 6, -6, 6, 0] } : { scale: isValidTarget && isOver ? 1.05 : 1 }}
-      transition={shaking ? { duration: 0.3 } : { duration: 0.18 }}
+    // 위치 고정용 래퍼(-translate-x/y-1/2로 슬롯 중심을 좌표에 맞춤)와 애니메이션용
+    // motion.div를 분리한다: framer-motion의 `animate`(scale/shake)는 최적화를 위해
+    // 미사용 트랜스폼 축을 `transform: none`으로 인라인 렌더링하는데, 같은 엘리먼트에
+    // Tailwind의 -translate-x-1/2 -translate-y-1/2 클래스가 함께 있으면 인라인 style이
+    // 항상 이겨서 중심 정렬이 깨진다(모바일 390에서 우측 슬롯이 뷰포트 밖으로 밀려나는
+    // 버그로 발견됨). 래퍼가 위치를, 내부 motion.div가 스케일/셰이크만 담당하도록 분리.
+    <div
+      data-slot-id={slot.id}
+      data-slot-group={slot.group}
+      data-slot-filled={!!player}
+      className="absolute h-18 w-18 -translate-x-1/2 -translate-y-1/2"
+      style={{ left: `${slot.x * 100}%`, top: `${slot.y * 100}%` }}
     >
-      <AnimatePresence mode="wait">
-        {player ? (
-          <MiniCard key={player.id} player={player} onRemove={onRemove} />
-        ) : (
-          <span key="label" className="overline pointer-events-none" style={{ color }}>
-            {slot.group}
-          </span>
-        )}
-      </AnimatePresence>
-    </motion.div>
+      <motion.div
+        ref={setNodeRef}
+        className="flex h-18 w-18 items-center justify-center rounded-full"
+        style={{
+          border: player ? 'none' : `2px dashed ${isInvalidTarget && isOver ? 'var(--error)' : color}`,
+          backgroundColor: player ? 'transparent' : `${color}1f`,
+          boxShadow: isValidTarget && isOver ? `0 0 0 2px ${color}` : undefined,
+          filter: isInvalidTarget && isOver ? 'brightness(0.75)' : undefined,
+        }}
+        animate={shaking ? { x: [0, -6, 6, -6, 6, 0] } : { scale: isValidTarget && isOver ? 1.05 : 1 }}
+        transition={shaking ? { duration: 0.3 } : { duration: 0.18 }}
+      >
+        <AnimatePresence mode="wait">
+          {player ? (
+            <MiniCard key={player.id} player={player} onRemove={onRemove} />
+          ) : (
+            <span key="label" className="overline pointer-events-none" style={{ color }}>
+              {slot.group}
+            </span>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </div>
   )
 }

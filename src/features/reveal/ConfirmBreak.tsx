@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import type { FinalXIEntry } from '../../types';
 import { Silhouette } from '../../components/Silhouette';
+import { Attribution } from '../../components/Attribution';
 import { positionColorVar } from '../../components/positionColors';
 import './confirmBreak.css';
 
@@ -45,6 +46,8 @@ export function ConfirmBreak({
             공개한다 ▶
           </button>
         </div>
+
+        <Attribution className="confirm-attribution" />
       </motion.div>
     </div>
   );

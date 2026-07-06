@@ -23,6 +23,7 @@ export const MiniCard = memo(function MiniCard({ player, onRemove }: MiniCardPro
     <motion.button
       type="button"
       onClick={onRemove}
+      data-player-id={player.id}
       aria-label={`${anonCode(player)} 슬롯에서 제거`}
       initial={{ scale: 0.85, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}

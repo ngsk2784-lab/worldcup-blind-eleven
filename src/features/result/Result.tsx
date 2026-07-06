@@ -2,8 +2,23 @@ import { useEffect, useRef, useState } from 'react';
 import { animate, motion } from 'framer-motion';
 import type { FinalXIEntry, Formation, XIScore } from '../../types';
 import { positionColorHex } from '../../components/positionColors';
+import { Attribution } from '../../components/Attribution';
 import { downloadCanvas, drawShareCard } from './shareCard';
 import './result.css';
+
+/** 미니 피치 라인 마킹(FormationBoard의 PitchLines와 동일 톤, 결과 화면 전용 경량 버전). */
+function ResultPitchLines() {
+  return (
+    <svg viewBox="0 0 300 375" className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true">
+      <rect x={4} y={4} width={292} height={367} rx={8} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={2} />
+      <line x1={4} y1={187.5} x2={296} y2={187.5} stroke="rgba(255,255,255,0.07)" strokeWidth={2} />
+      <circle cx={150} cy={187.5} r={40} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={2} />
+      <circle cx={150} cy={187.5} r={2.5} fill="rgba(255,255,255,0.14)" />
+      <rect x={80} y={289} width={140} height={82} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={2} />
+      <rect x={80} y={4} width={140} height={82} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={2} />
+    </svg>
+  );
+}
 
 const EASE_SNAP: [number, number, number, number] = [0.34, 1.56, 0.64, 1];
 
@@ -119,16 +134,21 @@ export function Result({
       <div className="result-xi-board">
         <span className="overline">나의 XI</span>
         <div className="result-pitch">
+          <ResultPitchLines />
           {formation.slots.map((slot) => {
             const entry = finalXI.find((e) => e.slot.id === slot.id);
             const color = entry ? positionColorHex(entry.player.positionGroup) : '#33424F';
+            const jersey = entry?.player.reveal.jerseyNumber;
             return (
               <div
                 key={slot.id}
-                className="result-pitch-dot"
-                style={{ left: `${slot.x * 100}%`, top: `${slot.y * 100}%`, background: color }}
+                className="result-pitch-badge"
+                style={{ left: `${slot.x * 100}%`, top: `${slot.y * 100}%` }}
                 title={entry?.player.reveal.realName}
               >
+                <div className="result-pitch-circle" style={{ borderColor: color, background: `${color}26`, color }}>
+                  {jersey != null ? jersey : '–'}
+                </div>
                 <span className="result-pitch-label">
                   {entry ? entry.player.reveal.realName.split(' ').pop() : slot.id}
                 </span>
@@ -158,7 +178,7 @@ export function Result({
         </button>
       </div>
 
-      <div className="result-caption">StatsBomb Open Data</div>
+      <Attribution className="result-caption" />
 
       <canvas ref={canvasRef} style={{ display: 'none' }} aria-hidden />
     </div>

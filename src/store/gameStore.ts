@@ -1,10 +1,17 @@
 import { create } from 'zustand'
 import type { FinalXIEntry, GamePhase, GameStore, Meta, PlayerCard, XIScore } from '../types'
 import players2022Raw from '../data/players.2022.json'
+import players2018Raw from '../data/players.2018.json'
 import metaRaw from '../data/meta.json'
 
-const players = players2022Raw as unknown as PlayerCard[]
 const meta = metaRaw as unknown as Meta
+
+/** 대회연도 -> 선수 풀. 대회 전환 시 pool을 스왑하고(§ qa 재작업 라운드1 #7), id 체계가
+ * 달라 이전 배치는 무효가 되므로 슬롯도 함께 리셋한다. */
+const POOLS: Record<2018 | 2022, PlayerCard[]> = {
+  2022: players2022Raw as unknown as PlayerCard[],
+  2018: players2018Raw as unknown as PlayerCard[],
+}
 
 function getFormation(formationKey: string) {
   return meta.formations.find((f) => f.key === formationKey) ?? meta.formations[0]
@@ -41,12 +48,13 @@ export interface InternalGameStore extends GameStore {
 export const useGameStore = create<InternalGameStore>((set, get) => ({
   phase: 'onboarding',
   tournament: 2022,
-  pool: players,
+  pool: POOLS[2022],
   formationKey: DEFAULT_FORMATION,
   slots: emptySlots(DEFAULT_FORMATION),
 
+  /** 대회 전환: pool 스왑 + 슬롯 리셋(이전 대회 선수 id는 새 pool에 존재하지 않음). */
   setTournament(year) {
-    set({ tournament: year })
+    set((s) => ({ tournament: year, pool: POOLS[year], slots: emptySlots(s.formationKey) }))
   },
 
   setPhase(phase) {
@@ -152,3 +160,10 @@ export function getFormationDef(formationKey: string) {
 }
 
 export { meta as gameMeta }
+
+// 개발/e2e 테스트 전용 훅: 프로덕션 빌드에서는 import.meta.env.DEV가 false로 상수 폴딩되어
+// 데드코드 제거(tree-shaking)된다. 드래그로는 재현 불가능한 스토어 방어로직(예: 같은 선수
+// 중복 슬롯 배치 가드)을 e2e에서 직접 검증하기 위함.
+if (import.meta.env.DEV) {
+  ;(window as unknown as { __gameStore?: typeof useGameStore }).__gameStore = useGameStore
+}
