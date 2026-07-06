@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>블라인드 일레븐 — S4 정체 공개 연출 (목업)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;600;700&family=Roboto+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-base:#0A0E14;--bg-pitch:#0D141C;--bg-vignette:#06090D;
+  --surface-1:#141B24;--surface-2:#1C2631;--surface-3:#26333F;--surface-line:#33424F;
+  --text-hi:#EAF1F7;--text-mid:#A5B4C0;--text-lo:#66757F;--text-onAccent:#0A0E14;
+  --accent:#E8B04B;--accent-hi:#F6C766;--accent-glow:rgba(232,176,75,0.45);
+  --data:#4FC3D9;--pos-fwd:#E5533C;--pos-mid:#3FB98C;--pos-def:#5B8DEF;--pos-gk:#E8B04B;
+  --glow-soft:0 0 32px rgba(232,176,75,0.25);
+  --r-md:10px;--r-lg:14px;
+  --font-display:'Oswald','Black Han Sans','Noto Sans KR',sans-serif;
+  --font-body:'Noto Sans KR','Oswald',sans-serif;
+  --font-mono:'Roboto Mono','Noto Sans KR',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);color:var(--text-mid);min-height:100vh;overflow:hidden;
+  background:var(--bg-vignette)}
+.stage-bg{position:fixed;inset:0;
+  background:radial-gradient(ellipse 100% 80% at 50% 12%,#0D141C 0%,#080C11 50%,#050709 100%)}
+/* spotlight */
+.spotlight{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%);width:680px;height:680px;
+  pointer-events:none;transition:opacity .5s;
+  background:radial-gradient(circle at 50% 50%,rgba(232,176,75,.14) 0%,rgba(232,176,75,.05) 40%,transparent 70%)}
+.hud-top{position:fixed;top:28px;left:0;right:0;text-align:center;z-index:5}
+.hud-top .ol{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent)}
+.hud-top .cnt{font-family:var(--font-mono);font-size:14px;color:var(--text-mid);margin-top:6px}
+.hud-top .cnt b{color:var(--text-hi)}
+/* stage */
+.stage{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:4}
+.scene{perspective:1600px;width:360px;height:480px}
+.card3d{position:relative;width:100%;height:100%;transform-style:preserve-3d;
+  transition:transform .6s cubic-bezier(.65,0,.35,1);border-radius:var(--r-lg)}
+.card3d.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:var(--r-lg);
+  box-shadow:0 20px 60px rgba(0,0,0,.7);overflow:hidden}
+/* anon front */
+.front{background:var(--surface-2);border-left:5px solid var(--pos-fwd);padding:26px;
+  display:flex;flex-direction:column;align-items:center;transition:filter .3s}
+.front .rib{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--pos-fwd);align-self:flex-start}
+.front .code{font-family:var(--font-mono);font-size:22px;color:var(--text-mid);margin:14px 0 6px;letter-spacing:.06em}
+.front .q{font-family:var(--font-display);font-weight:700;font-size:56px;color:var(--surface-line);margin-top:10px}
+.front .hint{font-size:12px;color:var(--text-lo);margin-top:auto;text-align:center}
+/* reveal back */
+.back{transform:rotateY(180deg);background:var(--surface-2);
+  border-left:5px solid var(--pos-fwd);padding:28px;display:flex;flex-direction:column;align-items:center}
+.back::after{content:"";position:absolute;inset:0;background:rgba(229,83,60,.10);pointer-events:none}
+.back .flag{width:52px;height:36px;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,.5);margin-bottom:14px;position:relative;z-index:1}
+.back .num{position:absolute;top:26px;right:26px;font-family:var(--font-mono);font-size:15px;color:var(--text-lo);z-index:1}
+.back .name{font-family:var(--font-display);font-weight:700;font-size:42px;color:var(--text-hi);
+  line-height:1.02;text-align:center;letter-spacing:.01em;z-index:1;text-shadow:0 0 24px rgba(232,176,75,.25)}
+.back .meta{font-size:14px;color:var(--text-mid);margin-top:8px;z-index:1}
+.back .badge{margin-top:18px;padding:9px 18px;border-radius:999px;background:rgba(232,176,75,.14);
+  border:1px solid var(--accent);color:var(--accent-hi);font-weight:600;font-size:14px;z-index:1;
+  box-shadow:var(--glow-soft)}
+.back .epithet{margin-top:20px;font-style:italic;font-size:17px;color:var(--text-hi);text-align:center;
+  line-height:1.5;max-width:280px;z-index:1}
+/* line-in animations for revealed content */
+.riser{opacity:0;transform:translateY(16px)}
+.card3d.done .riser{opacity:1;transform:translateY(0);transition:.4s cubic-bezier(.16,1,.3,1)}
+.card3d.done .name{transition-delay:.1s}
+.card3d.done .badge{transition-delay:.25s;transition:.4s cubic-bezier(.34,1.56,.64,1)}
+.card3d.done .epithet{transition-delay:.4s}
+.card3d.punch{animation:punch .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes punch{0%{transform:rotateY(180deg) scale(1)}40%{transform:rotateY(180deg) scale(1.045)}100%{transform:rotateY(180deg) scale(1)}}
+/* progress strip */
+.strip{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:5}
+.strip i{width:26px;height:6px;border-radius:3px;background:var(--surface-line);transition:.3s}
+.strip i.on{background:var(--accent);box-shadow:0 0 10px var(--accent-glow)}
+/* controls */
+.controls{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);display:flex;gap:14px;z-index:6}
+.btn{height:48px;padding:0 26px;border-radius:var(--r-md);font-family:var(--font-body);font-weight:600;
+  font-size:15px;cursor:pointer;border:none;transition:.2s}
+.btn-primary{background:var(--accent);color:var(--text-onAccent);box-shadow:var(--glow-soft)}
+.btn-primary:hover{background:var(--accent-hi)}
+.btn-ghost{background:transparent;color:var(--text-mid);border:1px solid var(--surface-line)}
+.spec{position:fixed;top:24px;left:24px;font-size:11px;color:var(--text-lo);z-index:6;max-width:230px;line-height:1.6}
+.spec b{color:var(--text-mid)}
+.src{position:fixed;bottom:14px;right:16px;font-size:11px;color:var(--text-lo);opacity:.6;z-index:5}
+</style>
+</head>
+<body>
+<div class="stage-bg"></div>
+<div class="spotlight" id="spot"></div>
+<div class="spec">목업: S4 정체 공개 연출.<br><b>다음 ▶</b>로 플립 시퀀스 체험.<br>익명(청록·차가움) → 공개(앰버·포지션색). 스타는 마지막. 사운드 없이 조명·타이밍·모션만.</div>
+
+<div class="hud-top">
+  <div class="ol">정체 공개</div>
+  <div class="cnt"><b id="cur">1</b> / 11</div>
+</div>
+
+<div class="stage">
+  <div class="scene">
+    <div class="card3d" id="card">
+      <div class="face front" id="front">
+        <span class="rib" id="rib">FWD · 최전방</span>
+        <div class="code" id="code">#F03</div>
+        <div class="q">?</div>
+        <div class="hint">당신이 데이터만 보고 뽑은 선수.<br>정체를 공개합니다.</div>
+      </div>
+      <div class="face back" id="back">
+        <span class="num riser" id="num">#10</span>
+        <div class="flag riser" id="flag"></div>
+        <div class="name riser" id="name">LIONEL MESSI</div>
+        <div class="meta riser" id="meta">아르헨티나 · FWD</div>
+        <div class="badge riser" id="badge">우승 · 결승 선발</div>
+        <div class="epithet riser" id="epithet">"무명인 줄 알았는데,<br>당신은 GOAT를 뽑았다."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="strip" id="strip"></div>
+<div class="controls">
+  <button class="btn btn-ghost" id="skip">건너뛰기</button>
+  <button class="btn btn-primary" id="next">다음 ▶</button>
+</div>
+<div class="src">데이터: StatsBomb Open Data</div>
+
+<script>
+// 국기 SVG (코드 생성, 외부 이미지 0) — 데모 3개국
+function flagSVG(country){
+  const f={
+    'AR':`<svg width="52" height="36" viewBox="0 0 6 4"><rect width="6" height="4" fill="#75AADB"/><rect y="1.33" width="6" height="1.33" fill="#fff"/><circle cx="3" cy="2" r=".45" fill="#F6B40E"/></svg>`,
+    'FR':`<svg width="52" height="36" viewBox="0 0 6 4"><rect width="2" height="4" fill="#0055A4"/><rect x="2" width="2" height="4" fill="#fff"/><rect x="4" width="2" height="4" fill="#EF4135"/></svg>`,
+    'HR':`<svg width="52" height="36" viewBox="0 0 6 4"><rect width="6" height="1.33" fill="#FF0000"/><rect y="1.33" width="6" height="1.33" fill="#fff"/><rect y="2.66" width="6" height="1.34" fill="#171796"/></svg>`,
+    'MA':`<svg width="52" height="36" viewBox="0 0 6 4"><rect width="6" height="4" fill="#C1272D"/><path d="M3 1.3l.3.9h.95l-.77.56.3.9L3 4.11l-.78.56.3-.9-.77-.57h.95z" fill="none" stroke="#006233" stroke-width=".12"/></svg>`,
+  };
+  return f[country]||f['AR'];
+}
+// 공개 순서 = 드라마 순 (평이 → 반전 → 스타 마지막)
+const SEQ=[
+  {rib:'DEF · 풀백',code:'#D21',col:'--pos-def',flag:'HR',num:'#22',name:'조스코 그바르디올',meta:'크로아티아 · DEF',badge:'4강',epithet:'"안정적인 선택.<br>데이터가 옳았다."',punch:false},
+  {rib:'MID · 수비형 MF',code:'#M04',col:'--pos-mid',flag:'FR',num:'#5',name:'오렐리앵 추아메니',meta:'프랑스 · MID',badge:'준우승 · 결승 선발',epithet:'"중원의 방패.<br>당신은 알아봤다."',punch:false},
+  {rib:'FWD · 윙어',code:'#F19',col:'--pos-fwd',flag:'MA',num:'#7',name:'하킴 지예시',meta:'모로코 · FWD',badge:'4강 · 돌풍의 주역',epithet:'"무명인 줄 알았는데,<br>당신은 다크호스를 봤다."',punch:true},
+  {rib:'FWD · 최전방',code:'#F03',col:'--pos-fwd',flag:'AR',num:'#10',name:'리오넬 메시',meta:'아르헨티나 · FWD',badge:'우승 · 대회 MVP',epithet:'"이름을 지웠는데도,<br>당신은 GOAT를 뽑았다."',punch:true},
+];
+let i=0;
+const strip=document.getElementById('strip');
+SEQ.forEach(()=>{const s=document.createElement('i');strip.appendChild(s);});
+const card=document.getElementById('card');
+function loadFront(d){
+  card.classList.remove('flipped','done','punch');
+  const c=getComputedStyle(document.documentElement).getPropertyValue(d.col);
+  document.getElementById('rib').textContent=d.rib;
+  document.getElementById('rib').style.color=c;
+  document.getElementById('front').style.borderLeftColor=c;
+  document.getElementById('back').style.borderLeftColor=c;
+  document.getElementById('code').textContent=d.code;
+  // back content preset (hidden until flip)
+  document.getElementById('num').textContent=d.num;
+  document.getElementById('flag').innerHTML=flagSVG(d.flag);
+  document.getElementById('name').innerHTML=d.name;
+  document.getElementById('meta').textContent=d.meta;
+  document.getElementById('badge').textContent=d.badge;
+  document.getElementById('epithet').innerHTML=d.epithet;
+}
+function reveal(){
+  const d=SEQ[i];
+  card.classList.add('flipped');
+  // 임팩트: 강한 반전 픽만 punch
+  setTimeout(()=>{card.classList.add('done'); if(d.punch)card.classList.add('punch');},640);
+}
+loadFront(SEQ[0]);
+let revealed=false;
+document.getElementById('next').onclick=()=>{
+  if(!revealed){ reveal(); revealed=true; strip.children[i].classList.add('on');
+    document.getElementById('next').textContent = i===SEQ.length-1?'결과 보기 ▶':'다음 ▶'; return; }
+  // move to next
+  if(i>=SEQ.length-1){ alert('→ 결과 화면(S5)으로 전환 (목업 종료)'); return; }
+  i++; document.getElementById('cur').textContent=i+1;
+  card.style.opacity=0;
+  setTimeout(()=>{ loadFront(SEQ[i]); card.style.opacity=1; revealed=false; },300);
+};
+document.getElementById('skip').onclick=()=>{
+  strip.querySelectorAll('i').forEach(s=>s.classList.add('on'));
+  i=SEQ.length-1;document.getElementById('cur').textContent=11;
+  loadFront(SEQ[i]);reveal();revealed=true;
+  document.getElementById('next').textContent='결과 보기 ▶';
+};
+</script>
+</body>
+</html>
