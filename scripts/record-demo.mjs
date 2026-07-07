@@ -2,7 +2,11 @@
 // 프로덕션(https://worldcupmanager.vercel.app) 대상으로 Playwright recordVideo(1920x1080)로
 // 전체 플로우(S0 온보딩 -> S1 탐색/비교 -> S2 배치 -> S3 확정 -> S4 정체공개 -> S5 결과)를
 // 사람이 플레이하듯 페이싱을 두고 촬영한다. window.__gameStore 훅은 프로덕션 빌드에 없으므로
-// (DEV 전용) 전 구간 실제 UI 상호작용(hover/click/drag)만 사용한다.
+// (DEV 전용) 전 구간 실제 UI 상호작용(hover/click)만 사용한다.
+//
+// § 배치 모델이 드래그 -> 클릭(탭)으로 전면 교체됨(feat/tap-only 머지):
+//   트레이 카드 클릭 -> 선택됨(포지션군 일치하는 빈 슬롯이 펄스 하이라이트) -> 슬롯 클릭 -> 배치.
+//   불일치 슬롯 클릭 시 배치되지 않고 셰이크 + 토스트로 거부. 이 스크립트는 그 모델로 촬영한다.
 //
 // 실행: node scripts/record-demo.mjs [baseUrl]
 // 출력: docs/submission/demo-video.webm (+ ffmpeg 있으면 demo-video.mp4 로 변환)
@@ -28,51 +32,32 @@ function log(msg) {
   console.log(`[record-demo] ${msg}`)
 }
 
-/** PointerSensor 기반 실제 마우스 드래그. steps/interval로 속도를 조절해 사람이 끄는 느낌을 낸다. */
-async function mouseDrag(page, from, to, { steps = 14, interval = 22, preHoldMs = 250, postHoldMs = 250 } = {}) {
-  await page.mouse.move(from.x, from.y)
-  await sleep(preHoldMs)
-  await page.mouse.down()
-  for (let i = 1; i <= steps; i++) {
-    const x = from.x + ((to.x - from.x) * i) / steps
-    const y = from.y + ((to.y - from.y) * i) / steps
-    await page.mouse.move(x, y)
-    await sleep(interval)
-  }
-  await sleep(postHoldMs)
-  await page.mouse.up()
-}
-
-async function centerOf(locator) {
-  const box = await locator.boundingBox()
-  if (!box) throw new Error('요소를 찾을 수 없습니다 (boundingBox null)')
-  return { x: box.x + box.width / 2, y: box.y + box.height / 2 }
-}
-
 /** 후보 트레이에서 특정 포지션그룹의 "아직 배치 안 된" 첫 후보(트레이가 자동 필터링). */
 function firstCandidate(page, group) {
   return page.locator(`[data-player-id][data-position-group="${group}"]`).first()
 }
 
 /**
- * 후보를 슬롯으로 드래그 배치.
+ * 후보 카드 클릭(선택) -> 일치하는 빈 슬롯 펄스 하이라이트 -> 슬롯 클릭(배치).
+ * pace='slow'는 선택 직후 하이라이트가 화면에 충분히 보이도록 홀드를 길게 둔다
+ * (슬롯 펄스 애니메이션 주기 1.1s, slow는 약 1.5주기 노출).
  * @param {'slow'|'rhythm'} pace
  */
 async function placeCandidate(page, group, slotId, pace = 'rhythm') {
   const slot = page.locator(`[data-slot-id="${slotId}"]`)
-  // 헤드리스 드래그가 드물게 threshold를 못 넘겨 실패할 수 있어(§디버깅으로 확인),
-  // 실패 시 자연스럽게 다시 시도한다(영상엔 "다시 끄는" 정도로만 보여 위화감 없음).
   for (let attempt = 1; attempt <= 3; attempt++) {
     const candidate = firstCandidate(page, group)
     await candidate.scrollIntoViewIfNeeded().catch(() => {})
-    await sleep(150) // 스크롤 정착 대기 — boundingBox를 스크롤 애니메이션 중간에 읽지 않도록
-    const from = await centerOf(candidate)
-    const to = await centerOf(slot)
-    if (pace === 'slow') {
-      await mouseDrag(page, from, to, { steps: 26, interval: 34, preHoldMs: 450, postHoldMs: 500 })
-    } else {
-      await mouseDrag(page, from, to, { steps: 12, interval: 16, preHoldMs: 150, postHoldMs: 220 })
-    }
+    await sleep(150) // 스크롤 정착 대기
+    await candidate.hover()
+    await sleep(pace === 'slow' ? 400 : 150)
+    await candidate.click() // 선택 -> 슬롯 펄스 하이라이트 트리거
+    await sleep(pace === 'slow' ? 1800 : 550) // 하이라이트 노출 홀드
+    await slot.scrollIntoViewIfNeeded().catch(() => {})
+    await slot.hover()
+    await sleep(pace === 'slow' ? 350 : 150)
+    await slot.click() // 배치
+    await sleep(150) // 리렌더 정착
     const filled = await slot.getAttribute('data-slot-filled')
     if (filled === 'true') {
       log(`  배치 완료: ${group} -> ${slotId}${attempt > 1 ? ` (재시도 ${attempt}회차 성공)` : ''}`)
@@ -84,17 +69,30 @@ async function placeCandidate(page, group, slotId, pace = 'rhythm') {
   log(`  경고: ${slotId} 배치 최종 실패 (3회 시도)`)
 }
 
-/** 일부러 그룹이 다른 슬롯으로 드롭 -> 거부 피드백(토스트/셰이크) 시연. 슬롯은 비워진 채 유지됨. */
-async function wrongDrop(page, group, slotId) {
+/**
+ * 일부러 그룹이 다른 후보를 선택 -> 불일치 슬롯 클릭 -> 거부 피드백(토스트/셰이크) 시연.
+ * 배치는 일어나지 않고 슬롯은 비워진 채 유지된다. 시연 후 선택 취소 배너로 정리하고 나온다.
+ */
+async function wrongClick(page, group, slotId) {
   const candidate = firstCandidate(page, group)
   const slot = page.locator(`[data-slot-id="${slotId}"]`)
   await candidate.scrollIntoViewIfNeeded().catch(() => {})
-  await sleep(150) // 스크롤 정착 대기 (안 하면 화면 밖 좌표로 드래그가 시작되어 무효 드롭이 됨)
-  const from = await centerOf(candidate)
-  const to = await centerOf(slot)
-  await mouseDrag(page, from, to, { steps: 20, interval: 28, preHoldMs: 350, postHoldMs: 300 })
-  await sleep(1400) // 경고 토스트/셰이크 애니메이션 노출 시간
-  log(`  의도적 오배치 시연: ${group} 카드를 ${slotId}(다른 그룹) 슬롯에 드롭 -> 거부됨`)
+  await sleep(150)
+  await candidate.hover()
+  await sleep(400)
+  await candidate.click() // 선택 -> "선택됨" 배너 노출
+  await sleep(1000) // 배너 확인 시간
+  await slot.scrollIntoViewIfNeeded().catch(() => {})
+  await slot.hover()
+  await sleep(300)
+  await slot.click() // 불일치 그룹 슬롯 클릭 -> 거부(셰이크 + 토스트)
+  await sleep(1500) // 경고 토스트/셰이크 애니메이션 노출 시간
+  const cancelBtn = page.locator('[data-testid="tap-select-cancel"]')
+  if (await cancelBtn.isVisible().catch(() => false)) {
+    await cancelBtn.click() // 선택 취소로 정리
+    await sleep(400)
+  }
+  log(`  의도적 불일치 클릭 시연: ${group} 카드를 ${slotId}(다른 그룹) 슬롯에 클릭 -> 거부됨`)
 }
 
 async function main() {
@@ -197,7 +195,9 @@ async function main() {
   mark('S2 배치 화면 진입')
 
   // ==========================================================================
-  // S2. 11명 드래그 배치 — 처음 몇 명은 천천히, 중간에 오배치 1회, 나머지는 리드미컬하게
+  // S2. 11명 클릭 배치 — 카드 클릭(선택) -> 슬롯 하이라이트 -> 슬롯 클릭(배치).
+  // 처음 몇 명은 하이라이트가 잘 보이도록 천천히, 중간에 불일치 클릭 1회로 거부 피드백,
+  // 나머지는 리드미컬하게.
   // ==========================================================================
   await sleep(2600)
 
@@ -208,8 +208,8 @@ async function main() {
   await placeCandidate(page, 'DEF', 'CB1', 'slow')
   await sleep(1300)
 
-  // 의도적 오배치: FWD 카드를 DEF 슬롯(CB2)에 드롭 -> 거부 피드백
-  await wrongDrop(page, 'FWD', 'CB2')
+  // 의도적 불일치 클릭: FWD 카드를 선택한 채 DEF 슬롯(CB2)을 클릭 -> 거부 피드백
+  await wrongClick(page, 'FWD', 'CB2')
   await sleep(1500)
 
   await placeCandidate(page, 'DEF', 'CB2', 'rhythm')
