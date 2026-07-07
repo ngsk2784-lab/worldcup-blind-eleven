@@ -64,10 +64,14 @@ export function Slot({ slot, player, shaking, tapSelectable, onRemove, onTapEmpt
         whileTap={!player ? { scale: 0.96 } : undefined}
         animate={
           shaking
-            ? { x: [0, -6, 6, -6, 6, 0] }
+            ? { x: [0, -6, 6, -6, 6, 0], boxShadow: 'none' }
             : tapSelectable
               ? { scale: [1, 1.08, 1], boxShadow: [`0 0 0 2px ${color}`, `0 0 0 7px ${color}66`, `0 0 0 2px ${color}`] }
-              : { scale: 1 }
+              // framer-motion은 animate 타깃에서 빠진 키를 이전 애니메이션의 마지막 값으로 그대로
+              // 남겨둔다(리셋 안 함). tapSelectable이 true→false로 바뀌는 순간(=배치 직후)
+              // boxShadow 키가 사라지면 펄스 링의 마지막 프레임 색이 미니카드 뒤에 잔존하는
+              // 버그가 생긴다. player 유무와 무관하게 항상 boxShadow: 'none'을 명시해 리셋한다.
+              : { scale: 1, boxShadow: 'none' }
         }
         transition={shaking ? { duration: 0.3 } : tapSelectable ? { duration: 1.1, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.18 }}
       >
