@@ -12,7 +12,7 @@
 
 | 포메이션 배치 | 정체 공개 |
 |---|---|
-| ![포메이션 배치](docs/review/final3/s2-formation-desktop-1440.png) | ![정체 공개](docs/review/final3/s4-reveal-desktop-1440.png) |
+| ![포메이션 배치](docs/review/final5/s2-selected-desktop-1440.png) | ![정체 공개](docs/review/final3/s4-reveal-desktop-1440.png) |
 
 ---
 
@@ -39,14 +39,14 @@
 1. **대회 선택** — 2018 또는 2022 월드컵 선택 후 "스카우팅 시작"
 2. **선수 탐색** — 카드 풀에서 익명 선수 50~60명의 스파이더차트·히트맵 비교
 3. **포지션 선발** — 골키퍼·수비수·미드필더·공격수 포지션별로 후보 좁혀가기
-4. **포메이션 배치** — 선택한 11명을 드래그로 필드에 배치 (포지션 제약 주의)
+4. **포메이션 배치** — 선택한 11명을 클릭(탭)으로 필드에 배치 (포지션 제약 주의)
 5. **정체 공개 & 평가** — 당신의 선발 명단이 공개되고 안목 점수 산출
 
 ---
 
 ## 기술 스택
 
-**프론트엔드**: React 18 · TypeScript · Vite · Zustand · Framer Motion · @dnd-kit · Tailwind CSS  
+**프론트엔드**: React 18 · TypeScript · Vite · Zustand · Framer Motion · Tailwind CSS  
 **데이터**: StatsBomb Open Data → 빌드 타임 사전 집계 → 정적 JSON (런타임 외부 API 0)  
 **배포**: Vercel 정적 호스팅
 
