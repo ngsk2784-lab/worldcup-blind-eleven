@@ -10,6 +10,7 @@ import { useGameStore, getFormationDef, gameMeta } from './store/gameStore'
 function App() {
   const phase = useGameStore((s) => s.phase)
   const setPhase = useGameStore((s) => s.setPhase)
+  const startSession = useGameStore((s) => s.startSession)
   const confirmXI = useGameStore((s) => s.confirmXI)
   const reset = useGameStore((s) => s.reset)
   const finalXI = useGameStore((s) => s.finalXI)
@@ -26,7 +27,15 @@ function App() {
   )
 
   if (phase === 'onboarding') {
-    return <Onboarding onStart={() => setPhase('explore')} />
+    return (
+      <Onboarding
+        onStart={() => {
+          // 매 판(세션) 시작 시 익명 코드/카드 순서를 재셔플(반복 플레이 암기 공략 방지).
+          startSession()
+          setPhase('explore')
+        }}
+      />
+    )
   }
 
   if (phase === 'explore') {

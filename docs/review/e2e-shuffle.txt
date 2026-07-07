@@ -1,0 +1,14 @@
+[e2e-shuffle] S0 -> S1 진입 완료
+[e2e-shuffle] ✅ PASS: S1: 카드 앞면 코드(#D01)와 상세패널 코드(#D01) 일치
+[e2e-shuffle] S1 -> S2 진입 완료
+[e2e-shuffle] ✅ PASS: S1 코드(#D01)와 S2 codeMap 코드(#D01) 일치(playerId 기준)
+[e2e-shuffle] ✅ PASS: S2 사전조건: store 훅으로 11/11 배치 완료
+[e2e-shuffle] S2 -> S4(reveal) 진입
+[e2e-shuffle] ✅ PASS: S4: reveal 카드 앞면에 rf-code 정상 노출 확인(4장 샘플)
+[e2e-shuffle] ✅ PASS: 세션내 일관성 시나리오: 콘솔/페이지 에러 없음 (발견 0건)
+[e2e-shuffle] ✅ PASS: 세션 시드 상이: A=3347199751 vs B=3480587986
+[e2e-shuffle] ✅ PASS: 세션 간 카드 나열 순서(pool)가 다름
+[e2e-shuffle] ✅ PASS: 세션 간 동일 선수의 익명 코드가 다르게 배정됨 (52/56명 코드 변경)
+[e2e-shuffle] ✅ PASS: 세션이 달라져도 코드 접두(G/D/M/F)는 포지션군과 일치 유지
+[e2e-shuffle] ==============================
+[e2e-shuffle] 전체 세션 셔플 e2e 통과 (FAIL 0건)

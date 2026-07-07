@@ -6,7 +6,7 @@ import { getFormationDef } from '../../store/gameStore'
 import { FormationBoard } from './FormationBoard'
 import { CandidateTray } from './CandidateTray'
 import { Attribution } from '../../components/Attribution'
-import { anonCode } from '../cards/PlayerCardTile'
+import { useAnonCode } from '../../store/gameStore'
 
 export interface FormationScreenProps {
   onGoToExplore: () => void
@@ -15,6 +15,7 @@ export interface FormationScreenProps {
 }
 
 export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationScreenProps) {
+  const anonCode = useAnonCode()
   const pool = useGameStore((s) => s.pool)
   const slots = useGameStore((s) => s.slots)
   const formationKey = useGameStore((s) => s.formationKey)

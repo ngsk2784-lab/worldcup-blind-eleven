@@ -1,6 +1,6 @@
 import type { PlayerCard } from '../../types'
 import { SpiderChart } from '../../components/SpiderChart'
-import { anonCode } from './PlayerCardTile'
+import { useAnonCode } from '../../store/gameStore'
 
 const AXIS_LABELS: Array<{ key: keyof PlayerCard['spider']; label: string }> = [
   { key: 'attack', label: '공격' },
@@ -18,6 +18,7 @@ export interface CompareOverlayProps {
 
 /** 비교 트레이 2장 스파이더 오버레이(두 폴리곤 겹쳐 diff). */
 export function CompareOverlay({ a, b }: CompareOverlayProps) {
+  const anonCode = useAnonCode()
   return (
     <div className="rounded-md border border-surface-line bg-surface-1 p-4">
       <div className="mb-2 flex items-center justify-between">

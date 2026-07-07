@@ -6,6 +6,7 @@ import { Heatmap } from '../../components/Heatmap';
 import { Silhouette } from '../../components/Silhouette';
 import { SpiderChart } from '../../components/SpiderChart';
 import { positionColorVar, positionOverlay } from '../../components/positionColors';
+import { useAnonCode } from '../../store/gameStore';
 import type { Intensity } from './revealOrder';
 import './reveal.css';
 
@@ -58,6 +59,7 @@ export function RevealCard({
   stage: CardStage;
   intensity: Intensity;
 }) {
+  const anonCode = useAnonCode();
   const { slot, player } = entry;
   const color = positionColorVar(player.positionGroup);
   const showBack = stage === 'flip' || stage === 'impact' || stage === 'narrative' || stage === 'exit' || stage === 'silence';
@@ -102,7 +104,7 @@ export function RevealCard({
                 </div>
                 <div className="rf-avatar">
                   <Silhouette position={player.positionGroup} />
-                  <span className="rf-code">#{player.id.slice(-3).toUpperCase()}</span>
+                  <span className="rf-code">{anonCode(player)}</span>
                 </div>
                 <div className="rf-mid">
                   <SpiderChart axes={player.spider} size={96} />

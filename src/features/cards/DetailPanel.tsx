@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import type { PlayerCard, PositionGroup } from '../../types'
 import { SpiderChart } from '../../components/SpiderChart'
-import { anonCode } from './PlayerCardTile'
+import { useAnonCode } from '../../store/gameStore'
 import { CompareOverlay } from './CompareOverlay'
 
 const POS_COLOR: Record<PositionGroup, string> = {
@@ -30,6 +30,7 @@ export interface DetailPanelProps {
 }
 
 export function DetailPanel({ player, compareIds, compareA, compareB, onAddCompare, onRemoveCompare }: DetailPanelProps) {
+  const anonCode = useAnonCode()
   return (
     <div className="w-full shrink-0 md:w-[360px]">
       <div className="rounded-xl border border-surface-line bg-surface-2 p-5 shadow-card">
