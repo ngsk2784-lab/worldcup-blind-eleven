@@ -21,7 +21,35 @@ const mdWithAbsImages = md.replace(/!\[([^\]]*)\]\((\.\.\/\.\.\/[^)]+)\)/g, (_m,
   return `![${alt}](${abs})`
 })
 
-const bodyHtml = marked.parse(mdWithAbsImages)
+// 표지(첫 페이지)에 쓸 값들은 proposal.md 본문에서 직접 추출한다(하드코딩 회피 -> 원본이 source of truth).
+const titleMatch = md.match(/^#\s+(.+)$/m) // 제품명: 블라인드 일레븬(Blind XI)
+const subtitleMatch = md.match(/^##\s+(.+)$/m) // 표지 대제목: 월드컵 감독 해커톤 기획서
+const pitchSectionMd = md.split('## 1. 한 줄 피치')[1] ?? ''
+const pitchMatch = pitchSectionMd.match(/\*\*([^*]+)\*\*/) // 한 줄 피치(볼드 문장)
+const deployMatch = md.match(/\*\*배포 URL\*\*:\s*(\S+)/)
+const githubMatch = md.match(/\*\*GitHub 저장소\*\*:\s*(\S+)/)
+const dateMatch = md.match(/\*기획서 작성:\s*([\d-]+)\*/)
+
+if (!titleMatch || !subtitleMatch || !pitchMatch || !deployMatch || !githubMatch || !dateMatch) {
+  throw new Error('표지 정보 추출 실패: proposal.md 구조가 변경되었는지 확인하세요.')
+}
+
+const coverHtml = `<div class="cover">
+  <div class="cover-title">${subtitleMatch[1]}</div>
+  <div class="cover-product">${titleMatch[1]}</div>
+  <div class="cover-pitch">${pitchMatch[1]}</div>
+  <div class="cover-footer">
+    <div>배포 URL: ${deployMatch[1]}</div>
+    <div>GitHub: ${githubMatch[1]}</div>
+    <div>${dateMatch[1]}</div>
+  </div>
+</div>`
+
+// 본문 렌더링은 원본 상단의 h1/제목(h2)/구분선을 제외한 "## 1. 한 줄 피치"부터 시작한다.
+// (제목부는 위 coverHtml이 대체하므로 마크다운 원본은 손대지 않는다.)
+const bodySectionStart = mdWithAbsImages.indexOf('## 1. 한 줄 피치')
+const bodyMdOnly = bodySectionStart >= 0 ? mdWithAbsImages.slice(bodySectionStart) : mdWithAbsImages
+const bodyHtml = marked.parse(bodyMdOnly)
 
 const html = `<!DOCTYPE html>
 <html lang="ko">
@@ -43,11 +71,46 @@ const html = `<!DOCTYPE html>
     font-weight: 900;
     color: #111;
   }
-  h1 {
-    font-size: 30px;
+  /* 표지: 커스텀 div(.cover)로 별도 렌더링. 단독 1페이지, 중앙 정렬. */
+  .cover {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    margin-top: 40vh;
-    /* 표지: h1은 단독 첫 페이지 */
+    page-break-after: always;
+  }
+  .cover-title {
+    font-size: 40px;
+    font-weight: 900;
+    color: #111;
+    line-height: 1.5;
+    margin-bottom: 30px;
+  }
+  .cover-product {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+  }
+  .cover-pitch {
+    font-size: 15px;
+    color: #444;
+    max-width: 480px;
+  }
+  .cover-footer {
+    position: absolute;
+    bottom: 34px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
+    color: #777;
+  }
+  .cover-footer div {
+    margin: 3px 0;
   }
   h2 {
     font-size: 21px;
@@ -56,15 +119,6 @@ const html = `<!DOCTYPE html>
     margin-top: 0;
     /* 각 대섹션(h2)은 항상 새 페이지에서 시작 */
     page-break-before: always;
-  }
-  /* 표지(h1) 바로 다음 h2는 부제목이므로 표지와 같은 페이지에 유지한다.
-     (h1 + h2 는 h2 단독 규칙보다 specificity가 높아 우선 적용됨) */
-  h1 + h2 {
-    page-break-before: avoid;
-    border-bottom: none;
-    font-size: 18px;
-    color: #555;
-    margin-top: 16px;
   }
   h3 {
     font-size: 16px;
@@ -125,6 +179,7 @@ const html = `<!DOCTYPE html>
 </style>
 </head>
 <body>
+${coverHtml}
 ${bodyHtml}
 </body>
 </html>`
