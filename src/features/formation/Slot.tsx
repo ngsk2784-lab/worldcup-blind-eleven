@@ -15,10 +15,14 @@ export interface SlotProps {
   player: PlayerCard | null
   activeDragGroup: PositionGroup | null
   shaking: boolean
+  /** 탭-배치 모드: 트레이에서 후보가 선택된 상태에서 이 슬롯의 포지션군이 일치 + 비어있음 → 펄스 하이라이트. */
+  tapSelectable: boolean
   onRemove: () => void
+  /** 비어있는 슬롯 탭. 선택된 후보가 없으면 상위에서 no-op 처리. */
+  onTapEmpty?: () => void
 }
 
-export function Slot({ slot, player, activeDragGroup, shaking, onRemove }: SlotProps) {
+export function Slot({ slot, player, activeDragGroup, shaking, tapSelectable, onRemove, onTapEmpty }: SlotProps) {
   const { setNodeRef, isOver } = useDroppable({ id: slot.id, data: { group: slot.group } })
   const color = POS_COLOR[slot.group]
   const isValidTarget = activeDragGroup !== null && activeDragGroup === slot.group
@@ -40,15 +44,35 @@ export function Slot({ slot, player, activeDragGroup, shaking, onRemove }: SlotP
     >
       <motion.div
         ref={setNodeRef}
-        className="flex h-18 w-18 items-center justify-center rounded-full"
+        onClick={player ? undefined : onTapEmpty}
+        role={player ? undefined : 'button'}
+        tabIndex={player ? undefined : 0}
+        aria-label={player ? undefined : `${slot.group} 슬롯${tapSelectable ? ' — 탭하여 배치' : ''}`}
+        onKeyDown={
+          player
+            ? undefined
+            : (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  onTapEmpty?.()
+                }
+              }
+        }
+        className={`flex h-18 w-18 items-center justify-center rounded-full ${!player ? 'cursor-pointer' : ''}`}
         style={{
           border: player ? 'none' : `2px dashed ${isInvalidTarget && isOver ? 'var(--error)' : color}`,
           backgroundColor: player ? 'transparent' : `${color}1f`,
           boxShadow: isValidTarget && isOver ? `0 0 0 2px ${color}` : undefined,
           filter: isInvalidTarget && isOver ? 'brightness(0.75)' : undefined,
         }}
-        animate={shaking ? { x: [0, -6, 6, -6, 6, 0] } : { scale: isValidTarget && isOver ? 1.05 : 1 }}
-        transition={shaking ? { duration: 0.3 } : { duration: 0.18 }}
+        animate={
+          shaking
+            ? { x: [0, -6, 6, -6, 6, 0] }
+            : tapSelectable
+              ? { scale: [1, 1.08, 1], boxShadow: [`0 0 0 2px ${color}`, `0 0 0 7px ${color}66`, `0 0 0 2px ${color}`] }
+              : { scale: isValidTarget && isOver ? 1.05 : 1 }
+        }
+        transition={shaking ? { duration: 0.3 } : tapSelectable ? { duration: 1.1, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.18 }}
       >
         <AnimatePresence mode="wait">
           {player ? (

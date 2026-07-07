@@ -7,9 +7,12 @@ const TABS: Array<PositionGroup | 'ALL'> = ['ALL', 'GK', 'DEF', 'MID', 'FWD']
 export interface CandidateTrayProps {
   pool: PlayerCard[]
   placedIds: Set<string>
+  /** 탭-배치 모드에서 현재 선택된 후보 id. */
+  selectedCandidateId?: string | null
+  onSelectCandidate?: (playerId: string) => void
 }
 
-export function CandidateTray({ pool, placedIds }: CandidateTrayProps) {
+export function CandidateTray({ pool, placedIds, selectedCandidateId = null, onSelectCandidate }: CandidateTrayProps) {
   const [tab, setTab] = useState<PositionGroup | 'ALL'>('ALL')
 
   const candidates = useMemo(
@@ -40,7 +43,15 @@ export function CandidateTray({ pool, placedIds }: CandidateTrayProps) {
         {candidates.length === 0 ? (
           <p className="p-4 text-center text-[13px] text-text-lo">배치 가능한 후보가 없습니다.</p>
         ) : (
-          candidates.map((p) => <CandidateCard key={p.id} player={p} dragId={`cand-${p.id}`} />)
+          candidates.map((p) => (
+            <CandidateCard
+              key={p.id}
+              player={p}
+              dragId={`cand-${p.id}`}
+              selected={selectedCandidateId === p.id}
+              onTap={() => onSelectCandidate?.(p.id)}
+            />
+          ))
         )}
       </div>
     </div>

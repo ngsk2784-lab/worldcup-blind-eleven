@@ -7,7 +7,8 @@ import { FilterChips } from './FilterChips'
 import { DetailPanel } from './DetailPanel'
 
 export interface ExploreScreenProps {
-  onGoToFormation: () => void
+  /** playerId 지정 시 S2에서 해당 선수를 탭-배치 선택 상태로 자동 시작(§ 피드백 A4). */
+  onGoToFormation: (playerId?: string) => void
 }
 
 export function ExploreScreen({ onGoToFormation }: ExploreScreenProps) {
@@ -133,7 +134,7 @@ export function ExploreScreen({ onGoToFormation }: ExploreScreenProps) {
         <Attribution className="explore-footer-attribution" />
         <button
           type="button"
-          onClick={onGoToFormation}
+          onClick={() => onGoToFormation()}
           className="ml-auto flex h-11 shrink-0 items-center gap-2 rounded-md bg-accent px-6 font-semibold text-text-onaccent shadow-glow-soft transition-colors hover:bg-accent-hi"
         >
           배치하러 가기 ▶
