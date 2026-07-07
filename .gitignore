@@ -37,3 +37,9 @@ lerna-debug.log*
 
 # TS build info
 *.tsbuildinfo
+
+.vercel
+
+# 데모 영상 원본 webm(무손실 촬영본, ffmpeg로 재생성 가능) — mp4만 커밋
+docs/submission/demo-video.webm
+docs/submission/.video-tmp/
