@@ -1,0 +1,37 @@
+[e2e-tap-only] 대상: http://localhost:5180 (데스크탑 1440x900)
+[e2e-tap-only] S0 -> S1 -> S2 진입 완료
+[e2e-tap-only] ✅ PASS: 테스트1: GK 카드 클릭 -> 선택됨(data-selected="true")
+[e2e-tap-only] ✅ PASS: 테스트1: 포지션군 불일치 슬롯 클릭 -> 경고 토스트 노출
+[e2e-tap-only] ✅ PASS: 테스트1: DEF 슬롯은 여전히 비어있음(거부됨)
+[e2e-tap-only] ✅ PASS: 테스트1: GK 후보는 트레이에 그대로 남아있음(배치 안 됨)
+[e2e-tap-only] ✅ PASS: 테스트1: 거부 후에도 선택 상태는 유지(다른 슬롯 재시도 가능)
+[e2e-tap-only] ✅ PASS: 테스트2: 0/11 상태에서 "정체 공개" CTA는 disabled
+[e2e-tap-only] ✅ PASS: 테스트2 사전조건: 클릭-배치로 GK 슬롯 정상 배치 확인
+[e2e-tap-only] ✅ PASS: 테스트2: 1/11 상태에서도 "정체 공개" CTA는 여전히 disabled
+[e2e-tap-only] ✅ PASS: 테스트3 사전조건: store 훅 접근 가능 (ok)
+[e2e-tap-only] ✅ PASS: 테스트3: 같은 선수를 CB2에 재배치하면 원래 슬롯(CB1)은 비워짐
+[e2e-tap-only] ✅ PASS: 테스트3: 새 슬롯(CB2)에 정상 배치됨
+[e2e-tap-only] ✅ PASS: 테스트4 사전조건: MID 카드 클릭 -> 선택 상태 진입
+[e2e-tap-only] ✅ PASS: 테스트4a: "취소" 버튼 클릭 -> 선택 해제(배너 사라짐)
+[e2e-tap-only] ✅ PASS: 테스트4a: 취소 후 어떤 카드도 선택됨 상태 아님
+[e2e-tap-only] ✅ PASS: 테스트4b 사전조건: 다시 선택 상태 진입
+[e2e-tap-only] ✅ PASS: 테스트4b: 배경(후보 트레이 패널 여백) 클릭 -> 선택 해제
+[e2e-tap-only] ✅ PASS: 부가: 콘솔/페이지 에러 없음 (발견: 0건)
+[e2e-tap-only] ✅ PASS: 테스트6 사전조건: store 훅으로 11/11 배치 완료 (11명)
+[e2e-tap-only] ✅ PASS: 테스트6 사전조건: Reveal(S4) 화면 진입
+[e2e-tap-only] ✅ PASS: 테스트6: 연타 후에도 정상적으로 Result(S5) 화면 도달(중복 전환/크래시 없음)
+[e2e-tap-only] ✅ PASS: 테스트6: Result 화면이 중복 렌더되지 않음
+[e2e-tap-only] ✅ PASS: 테스트6 부가: 연타 이후에도 콘솔/페이지 에러 없음 (누적 0건)
+[e2e-tap-only] 누적 콘솔/페이지 에러 없음
+[e2e-tap-only] 모바일 390: S0 -> S1 -> S2 진입 완료
+[e2e-tap-only] ✅ PASS: 테스트5: 모바일 390 — GK 카드 탭 -> 선택됨 상태
+[e2e-tap-only] ✅ PASS: 테스트5: 선택 안내 배너 노출
+[e2e-tap-only] ✅ PASS: 테스트5: 모바일 390 탭-배치로 GK 슬롯 배치 성공
+[e2e-tap-only] ✅ PASS: 테스트5: 배치 완료 후 선택 상태 자동 해제
+[e2e-tap-only] ✅ PASS: 테스트5: 카운터 1/11 반영 (표시: 1/11)
+[e2e-tap-only] ✅ PASS: 테스트5: 배치된 후보는 트레이 목록에서 사라짐
+[e2e-tap-only] ✅ PASS: 테스트5: 배치된 슬롯 탭 -> 해제(빈 슬롯으로 복귀)
+[e2e-tap-only] ✅ PASS: 테스트5: 해제 후 카운터 0/11 반영 (표시: 0/11)
+[e2e-tap-only] ✅ PASS: 테스트5 부가: 모바일 콘솔/페이지 에러 없음 (발견: 0건)
+[e2e-tap-only] ==============================
+[e2e-tap-only] 전체 탭/클릭 전용 부정경로 e2e 통과 (FAIL 0건)

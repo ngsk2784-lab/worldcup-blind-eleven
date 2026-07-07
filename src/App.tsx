@@ -18,8 +18,6 @@ function App() {
   const tournament = useGameStore((s) => s.tournament)
 
   const [showConfirm, setShowConfirm] = useState(false)
-  // § 오너 실기기 피드백 A4: S1 "이 선수 배치하기" -> S2 진입 시 자동 선택할 선수 id 전달용.
-  const [pendingSelectPlayerId, setPendingSelectPlayerId] = useState<string | null>(null)
 
   const formation = useMemo(() => getFormationDef(formationKey), [formationKey])
   const tournamentLabel = useMemo(
@@ -33,23 +31,14 @@ function App() {
 
   if (phase === 'explore') {
     return (
-      <ExploreScreen
-        onGoToFormation={(playerId) => {
-          setPendingSelectPlayerId(playerId ?? null)
-          setPhase('formation')
-        }}
-      />
+      <ExploreScreen onGoToFormation={() => setPhase('formation')} />
     )
   }
 
   if (phase === 'formation') {
     return (
       <>
-        <FormationScreen
-          onGoToExplore={() => setPhase('explore')}
-          onConfirmRequest={() => setShowConfirm(true)}
-          initialSelectedPlayerId={pendingSelectPlayerId}
-        />
+        <FormationScreen onGoToExplore={() => setPhase('explore')} onConfirmRequest={() => setShowConfirm(true)} />
         {showConfirm && (
           <ConfirmBreak
             finalXI={finalXI()}

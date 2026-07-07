@@ -47,7 +47,6 @@ export function CandidateTray({ pool, placedIds, selectedCandidateId = null, onS
             <CandidateCard
               key={p.id}
               player={p}
-              dragId={`cand-${p.id}`}
               selected={selectedCandidateId === p.id}
               onTap={() => onSelectCandidate?.(p.id)}
             />
