@@ -24,8 +24,8 @@ const mdWithAbsImages = md.replace(/!\[([^\]]*)\]\((\.\.\/\.\.\/[^)]+)\)/g, (_m,
 // 표지(첫 페이지)에 쓸 값들은 proposal.md 본문에서 직접 추출한다(하드코딩 회피 -> 원본이 source of truth).
 const titleMatch = md.match(/^#\s+(.+)$/m) // 제품명: 블라인드 일레븬(Blind XI)
 const subtitleMatch = md.match(/^##\s+(.+)$/m) // 표지 대제목: 월드컵 감독 해커톤 기획서
-const pitchSectionMd = md.split('## 1. 한 줄 피치')[1] ?? ''
-const pitchMatch = pitchSectionMd.match(/\*\*([^*]+)\*\*/) // 한 줄 피치(볼드 문장)
+const pitchSectionMd = md.split('## 1. 제품 개요')[1] ?? ''
+const pitchMatch = pitchSectionMd.match(/\*\*([^*]+)\*\*/) // 한 줄 피치(볼드 문장, "## 1. 제품 개요" 도입부)
 const deployMatch = md.match(/\*\*배포 URL\*\*:\s*(\S+)/)
 const githubMatch = md.match(/\*\*GitHub 저장소\*\*:\s*(\S+)/)
 const dateMatch = md.match(/\*기획서 작성:\s*([\d-]+)\*/)
@@ -45,9 +45,9 @@ const coverHtml = `<div class="cover">
   </div>
 </div>`
 
-// 본문 렌더링은 원본 상단의 h1/제목(h2)/구분선을 제외한 "## 1. 한 줄 피치"부터 시작한다.
+// 본문 렌더링은 원본 상단의 h1/제목(h2)/구분선을 제외한 "## 1. 제품 개요"부터 시작한다.
 // (제목부는 위 coverHtml이 대체하므로 마크다운 원본은 손대지 않는다.)
-const bodySectionStart = mdWithAbsImages.indexOf('## 1. 한 줄 피치')
+const bodySectionStart = mdWithAbsImages.indexOf('## 1. 제품 개요')
 const bodyMdOnly = bodySectionStart >= 0 ? mdWithAbsImages.slice(bodySectionStart) : mdWithAbsImages
 const bodyHtml = marked.parse(bodyMdOnly)
 
