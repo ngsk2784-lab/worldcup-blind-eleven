@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type MouseEvent as ReactMouseEvent } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   DndContext,
@@ -24,9 +24,11 @@ export interface FormationScreenProps {
   onGoToExplore: () => void
   /** 11/11 완료 후 "정체 공개" CTA 클릭 시 호출 — 상위(App)가 확정 브레이크(S3) 모달을 띄운다. */
   onConfirmRequest: () => void
+  /** S1 상세패널 "이 선수 배치하기"로 진입한 경우 — 마운트 시 해당 선수를 탭-배치 선택 상태로 시작. */
+  initialSelectedPlayerId?: string | null
 }
 
-export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationScreenProps) {
+export function FormationScreen({ onGoToExplore, onConfirmRequest, initialSelectedPlayerId = null }: FormationScreenProps) {
   const pool = useGameStore((s) => s.pool)
   const slots = useGameStore((s) => s.slots)
   const formationKey = useGameStore((s) => s.formationKey)
@@ -42,6 +44,9 @@ export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationSc
   const [activeDragPlayerId, setActiveDragPlayerId] = useState<string | null>(null)
   const [shakingSlotId, setShakingSlotId] = useState<string | null>(null)
   const [toast, setToast] = useState<string | null>(null)
+  // § 오너 실기기 피드백 A — 모바일 탭-배치 모드(드래그 보조). 트레이 카드 탭 → 이 선수가
+  // "선택됨" 상태가 되고, 피치의 포지션군 일치 빈 슬롯이 펄스 하이라이트된다. 슬롯 탭 → 배치.
+  const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null)
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
@@ -50,10 +55,46 @@ export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationSc
 
   const placedIds = useMemo(() => new Set(Object.values(slots).filter((v): v is string => !!v)), [slots])
   const draggedPlayer = pool.find((p) => p.id === activeDragPlayerId) ?? null
+  const selectedCandidate = pool.find((p) => p.id === selectedCandidateId) ?? null
+
+  // S1 상세패널 "이 선수 배치하기" 진입점: 마운트 시 1회, 아직 미배치 선수면 선택 상태로 시작.
+  useEffect(() => {
+    if (initialSelectedPlayerId && !placedIds.has(initialSelectedPlayerId)) {
+      setSelectedCandidateId(initialSelectedPlayerId)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   function showToast(message: string) {
     setToast(message)
     window.setTimeout(() => setToast((cur) => (cur === message ? null : cur)), 1600)
+  }
+
+  function rejectSlot(slotId: string, group: PositionGroup) {
+    setShakingSlotId(slotId)
+    window.setTimeout(() => setShakingSlotId((cur) => (cur === slotId ? null : cur)), 320)
+    showToast(`${group} 슬롯엔 ${group}만 배치할 수 있어요`)
+  }
+
+  function handleSelectCandidate(playerId: string) {
+    setSelectedCandidateId((cur) => (cur === playerId ? null : playerId))
+  }
+
+  function handleSlotTap(slotId: string) {
+    if (!selectedCandidate) return
+    const slotDef = formation.slots.find((s) => s.id === slotId)
+    if (!slotDef) return
+    if (slotDef.group !== selectedCandidate.positionGroup) {
+      rejectSlot(slotId, slotDef.group)
+      return
+    }
+    place(slotId, selectedCandidate.id)
+    setSelectedCandidateId(null)
+  }
+
+  /** 배경(빈 영역) 탭 → 선택 취소. 클릭 타깃이 컨테이너 자기 자신일 때만(자식 카드/슬롯 클릭은 버블링돼도 타깃이 자식이라 무시). */
+  function handleBackgroundClick(e: ReactMouseEvent<HTMLDivElement>) {
+    if (e.target === e.currentTarget) setSelectedCandidateId(null)
   }
 
   function handleDragStart(event: DragStartEvent) {
@@ -61,6 +102,8 @@ export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationSc
     if (!data) return
     setActiveDragGroup(data.positionGroup)
     setActiveDragPlayerId(data.playerId)
+    // 드래그 시작 시 탭-배치 선택 모드는 취소(두 모드 동시 활성 방지).
+    setSelectedCandidateId(null)
   }
 
   function handleDragEnd(event: DragEndEvent) {
@@ -74,9 +117,7 @@ export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationSc
     if (!slotDef) return
 
     if (slotDef.group !== data.positionGroup) {
-      setShakingSlotId(slotId)
-      window.setTimeout(() => setShakingSlotId((cur) => (cur === slotId ? null : cur)), 320)
-      showToast(`${slotDef.group} 슬롯엔 ${slotDef.group}만 배치할 수 있어요`)
+      rejectSlot(slotId, slotDef.group)
       return
     }
     place(slotId, data.playerId)
@@ -87,14 +128,19 @@ export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationSc
   return (
     <DndContext sensors={sensors} collisionDetection={pointerWithin} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="min-h-screen pb-8">
-        <header className="sticky top-0 z-10 flex h-16 flex-wrap items-center gap-4 border-b border-surface-line bg-surface-1/90 px-4 backdrop-blur-md md:px-8">
+        {/* § 오너 실기기 피드백 B1: 기존엔 h-16 고정 높이라 모바일에서 콘텐츠가 flex-wrap으로
+            2줄이 되면 두번째 줄(카운터+CTA)이 헤더 배경 박스 밖으로 흘러나와 피치 상단 선과
+            겹쳐 보였다. 고정 높이를 없애 헤더가 실제 콘텐츠 줄 수만큼 자연스럽게 늘어나게 하고
+            (sticky는 문서 흐름을 밀어내므로 겹침이 원천적으로 발생하지 않는다), 데스크탑은
+            기존 한 줄(md:h-16) 레이아웃을 그대로 유지한다. */}
+        <header className="sticky top-0 z-20 flex flex-wrap items-center gap-3 border-b border-surface-line bg-surface-1/95 px-4 py-3 backdrop-blur-md md:h-16 md:flex-nowrap md:gap-4 md:px-8 md:py-0">
           <div className="font-display text-xl font-bold tracking-wide text-text-hi">
             BLIND <b className="text-accent">XI</b>
           </div>
           <button type="button" onClick={onGoToExplore} className="text-[14px] text-text-lo underline decoration-dotted hover:text-text-mid">
             ◀ 탐색으로
           </button>
-          <div className="flex items-center gap-1.5" aria-hidden="true">
+          <div className="hidden items-center gap-1.5 md:flex" aria-hidden="true">
             {dotsFilled.map((filled, i) => (
               <i key={i} className={`h-2 w-2 rounded-full ${filled ? 'bg-ok' : 'bg-surface-line'}`} />
             ))}
@@ -118,8 +164,37 @@ export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationSc
           </motion.button>
         </header>
 
-        <div className="mx-auto flex max-w-[var(--content-max)] flex-col gap-6 px-4 py-7 md:flex-row md:items-start md:px-6">
+        <div
+          className="mx-auto flex max-w-[var(--content-max)] flex-col gap-6 px-4 py-7 md:flex-row md:items-start md:px-6"
+          onClick={handleBackgroundClick}
+        >
           <div className="min-w-0 flex-1 md:sticky md:top-[60px]">
+            <AnimatePresence>
+              {selectedCandidate && (
+                <motion.div
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.2 }}
+                  data-testid="tap-select-banner"
+                  className="mb-3 flex items-center justify-between gap-3 rounded-md border px-3.5 py-2.5 text-[13px] font-medium"
+                  style={{ borderColor: 'var(--accent)', backgroundColor: 'var(--surface-2)', color: 'var(--accent)' }}
+                >
+                  <span>
+                    <span className="font-mono">{anonCode(selectedCandidate)}</span> 선택됨 · 배치할{' '}
+                    {selectedCandidate.positionGroup} 슬롯을 탭하세요
+                  </span>
+                  <button
+                    type="button"
+                    data-testid="tap-select-cancel"
+                    onClick={() => setSelectedCandidateId(null)}
+                    className="shrink-0 text-text-lo underline decoration-dotted hover:text-text-mid"
+                  >
+                    취소
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
             <FormationBoard
               formation={formation}
               slots={slots}
@@ -127,10 +202,20 @@ export function FormationScreen({ onGoToExplore, onConfirmRequest }: FormationSc
               activeDragGroup={activeDragGroup}
               shakingSlotId={shakingSlotId}
               onRemove={remove}
+              tapSelectGroup={selectedCandidate?.positionGroup ?? null}
+              onSlotTap={handleSlotTap}
             />
           </div>
-          <div className="w-full shrink-0 rounded-xl border border-surface-line bg-surface-1 p-4 pb-14 md:w-[340px] md:sticky md:top-[60px] md:h-[calc(100vh-80px)] md:overflow-hidden md:pb-4">
-            <CandidateTray pool={pool} placedIds={placedIds} />
+          <div
+            className="w-full shrink-0 rounded-xl border border-surface-line bg-surface-1 p-4 pb-14 md:w-[340px] md:sticky md:top-[60px] md:h-[calc(100vh-80px)] md:overflow-hidden md:pb-4"
+            onClick={handleBackgroundClick}
+          >
+            <CandidateTray
+              pool={pool}
+              placedIds={placedIds}
+              selectedCandidateId={selectedCandidateId}
+              onSelectCandidate={handleSelectCandidate}
+            />
           </div>
         </div>
 
