@@ -19,24 +19,14 @@ export interface FormationBoardProps {
   formation: Formation
   slots: Record<string, string | null>
   pool: PlayerCard[]
-  activeDragGroup: PositionGroup | null
   shakingSlotId: string | null
   onRemove: (slotId: string) => void
-  /** 탭-배치 모드: 트레이에서 선택된 후보의 포지션군(없으면 null). */
+  /** 클릭-배치 모드: 트레이에서 선택된 후보의 포지션군(없으면 null). */
   tapSelectGroup: PositionGroup | null
   onSlotTap: (slotId: string) => void
 }
 
-export function FormationBoard({
-  formation,
-  slots,
-  pool,
-  activeDragGroup,
-  shakingSlotId,
-  onRemove,
-  tapSelectGroup,
-  onSlotTap,
-}: FormationBoardProps) {
+export function FormationBoard({ formation, slots, pool, shakingSlotId, onRemove, tapSelectGroup, onSlotTap }: FormationBoardProps) {
   return (
     <div className="relative mx-auto aspect-[300/460] w-full max-w-[420px] rounded-xl bg-bg-pitch shadow-card">
       <PitchLines />
@@ -45,7 +35,6 @@ export function FormationBoard({
           key={slot.id}
           slot={slot}
           player={pool.find((p) => p.id === slots[slot.id]) ?? null}
-          activeDragGroup={activeDragGroup}
           shaking={shakingSlotId === slot.id}
           tapSelectable={tapSelectGroup !== null && tapSelectGroup === slot.group && !slots[slot.id]}
           onRemove={() => onRemove(slot.id)}

@@ -27,12 +27,9 @@ export interface DetailPanelProps {
   compareB: PlayerCard | null
   onAddCompare: () => void
   onRemoveCompare: (playerId: string) => void
-  /** § 오너 실기기 피드백 A4: 이 버튼이 모바일 탭-배치 모드의 진입점 — S2로 이동 + 이 선수를
-   * 자동으로 "선택됨" 상태로 시작해 가능한 슬롯이 곧바로 하이라이트되게 한다. */
-  onGoToFormation: (playerId: string) => void
 }
 
-export function DetailPanel({ player, compareIds, compareA, compareB, onAddCompare, onRemoveCompare, onGoToFormation }: DetailPanelProps) {
+export function DetailPanel({ player, compareIds, compareA, compareB, onAddCompare, onRemoveCompare }: DetailPanelProps) {
   return (
     <div className="w-full shrink-0 md:w-[360px]">
       <div className="rounded-xl border border-surface-line bg-surface-2 p-5 shadow-card">
@@ -68,13 +65,6 @@ export function DetailPanel({ player, compareIds, compareA, compareB, onAddCompa
                   </div>
                 ))}
               </div>
-              <button
-                type="button"
-                onClick={() => onGoToFormation(player.id)}
-                className="mb-2.5 h-12 w-full rounded-md bg-accent font-body text-[15px] font-semibold text-text-onaccent shadow-glow-soft transition-colors hover:bg-accent-hi"
-              >
-                이 선수 배치하기
-              </button>
               <button
                 type="button"
                 onClick={onAddCompare}

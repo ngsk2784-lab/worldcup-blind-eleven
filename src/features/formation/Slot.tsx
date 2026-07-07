@@ -1,5 +1,4 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useDroppable } from '@dnd-kit/core'
 import type { FormationSlot, PlayerCard, PositionGroup } from '../../types'
 import { MiniCard } from './MiniCard'
 
@@ -13,20 +12,16 @@ const POS_COLOR: Record<PositionGroup, string> = {
 export interface SlotProps {
   slot: FormationSlot
   player: PlayerCard | null
-  activeDragGroup: PositionGroup | null
   shaking: boolean
-  /** 탭-배치 모드: 트레이에서 후보가 선택된 상태에서 이 슬롯의 포지션군이 일치 + 비어있음 → 펄스 하이라이트. */
+  /** 클릭-배치 모드: 트레이에서 후보가 선택된 상태에서 이 슬롯의 포지션군이 일치 + 비어있음 → 펄스 하이라이트. */
   tapSelectable: boolean
   onRemove: () => void
-  /** 비어있는 슬롯 탭. 선택된 후보가 없으면 상위에서 no-op 처리. */
+  /** 비어있는 슬롯 클릭. 선택된 후보가 없으면 상위에서 no-op 처리. */
   onTapEmpty?: () => void
 }
 
-export function Slot({ slot, player, activeDragGroup, shaking, tapSelectable, onRemove, onTapEmpty }: SlotProps) {
-  const { setNodeRef, isOver } = useDroppable({ id: slot.id, data: { group: slot.group } })
+export function Slot({ slot, player, shaking, tapSelectable, onRemove, onTapEmpty }: SlotProps) {
   const color = POS_COLOR[slot.group]
-  const isValidTarget = activeDragGroup !== null && activeDragGroup === slot.group
-  const isInvalidTarget = activeDragGroup !== null && activeDragGroup !== slot.group
 
   return (
     // 위치 고정용 래퍼(-translate-x/y-1/2로 슬롯 중심을 좌표에 맞춤)와 애니메이션용
@@ -43,11 +38,10 @@ export function Slot({ slot, player, activeDragGroup, shaking, tapSelectable, on
       style={{ left: `${slot.x * 100}%`, top: `${slot.y * 100}%` }}
     >
       <motion.div
-        ref={setNodeRef}
         onClick={player ? undefined : onTapEmpty}
         role={player ? undefined : 'button'}
         tabIndex={player ? undefined : 0}
-        aria-label={player ? undefined : `${slot.group} 슬롯${tapSelectable ? ' — 탭하여 배치' : ''}`}
+        aria-label={player ? undefined : `${slot.group} 슬롯${tapSelectable ? ' — 클릭하여 배치' : ''}`}
         onKeyDown={
           player
             ? undefined
@@ -60,17 +54,20 @@ export function Slot({ slot, player, activeDragGroup, shaking, tapSelectable, on
         }
         className={`flex h-18 w-18 items-center justify-center rounded-full ${!player ? 'cursor-pointer' : ''}`}
         style={{
-          border: player ? 'none' : `2px dashed ${isInvalidTarget && isOver ? 'var(--error)' : color}`,
+          border: player ? 'none' : `2px dashed ${color}`,
           backgroundColor: player ? 'transparent' : `${color}1f`,
-          boxShadow: isValidTarget && isOver ? `0 0 0 2px ${color}` : undefined,
-          filter: isInvalidTarget && isOver ? 'brightness(0.75)' : undefined,
         }}
+        // 클릭 배치 모드에서만 어포던스가 필요하다: 선택된 후보가 있고 이 슬롯이 대상일 때
+        // 펄스 하이라이트(tapSelectable), 거부 시 셰이크. 데스크탑 마우스 호버는 빈 슬롯에
+        // 살짝 확대로 클릭 가능함을 알린다.
+        whileHover={!player ? { scale: 1.06 } : undefined}
+        whileTap={!player ? { scale: 0.96 } : undefined}
         animate={
           shaking
             ? { x: [0, -6, 6, -6, 6, 0] }
             : tapSelectable
               ? { scale: [1, 1.08, 1], boxShadow: [`0 0 0 2px ${color}`, `0 0 0 7px ${color}66`, `0 0 0 2px ${color}`] }
-              : { scale: isValidTarget && isOver ? 1.05 : 1 }
+              : { scale: 1 }
         }
         transition={shaking ? { duration: 0.3 } : tapSelectable ? { duration: 1.1, repeat: Infinity, ease: 'easeInOut' } : { duration: 0.18 }}
       >
