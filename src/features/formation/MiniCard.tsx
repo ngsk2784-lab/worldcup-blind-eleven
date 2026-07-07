@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { motion } from 'framer-motion'
 import type { PlayerCard, PositionGroup } from '../../types'
 import { Silhouette } from '../../components/Silhouette'
-import { anonCode } from '../cards/PlayerCardTile'
+import { useAnonCode } from '../../store/gameStore'
 
 const POS_COLOR: Record<PositionGroup, string> = {
   GK: 'var(--pos-gk)',
@@ -20,6 +20,7 @@ export interface MiniCardProps {
  * (§ 오너 실기기 피드백 B2: 기존 72x96 카드가 슬롯 원 대비 과대해 세로로 넘쳐 이웃 슬롯을
  * 침범 렌더하는 문제 — 특히 GK↔센터백처럼 대각선으로 가까운 슬롯 쌍에서 재현됨). */
 export const MiniCard = memo(function MiniCard({ player, onRemove }: MiniCardProps) {
+  const anonCode = useAnonCode()
   const color = POS_COLOR[player.positionGroup]
   return (
     <motion.button

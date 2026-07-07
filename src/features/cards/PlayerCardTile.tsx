@@ -3,16 +3,13 @@ import type { PlayerCard as PlayerCardType, PositionGroup } from '../../types'
 import { SpiderChart } from '../../components/SpiderChart'
 import { Heatmap } from '../../components/Heatmap'
 import { Silhouette } from '../../components/Silhouette'
+import { useAnonCode } from '../../store/gameStore'
 
 const POS_COLOR: Record<PositionGroup, string> = {
   GK: 'var(--pos-gk)',
   DEF: 'var(--pos-def)',
   MID: 'var(--pos-mid)',
   FWD: 'var(--pos-fwd)',
-}
-
-export function anonCode(player: PlayerCardType) {
-  return `#${player.positionGroup[0]}${player.id.slice(-2).toUpperCase()}`
 }
 
 export interface PlayerCardTileProps {
@@ -23,6 +20,7 @@ export interface PlayerCardTileProps {
 
 /** S1 카드 그리드 앞면(익명). 220x300 비율. */
 export const PlayerCardTile = memo(function PlayerCardTile({ player, selected, onSelect }: PlayerCardTileProps) {
+  const anonCode = useAnonCode()
   const color = POS_COLOR[player.positionGroup]
   const confDots = Math.min(4, Math.max(1, Math.round(player.sampleMinutes / 200)))
 

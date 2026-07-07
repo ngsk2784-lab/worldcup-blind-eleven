@@ -1,6 +1,6 @@
 import type { PlayerCard, PositionGroup } from '../../types'
 import { Silhouette } from '../../components/Silhouette'
-import { anonCode } from '../cards/PlayerCardTile'
+import { useAnonCode } from '../../store/gameStore'
 
 const POS_COLOR: Record<PositionGroup, string> = {
   GK: 'var(--pos-gk)',
@@ -19,6 +19,7 @@ export interface CandidateCardProps {
 
 /** 후보 트레이 카드. 클릭 → 선택 → 가능 슬롯 클릭으로 배치(유일한 인터랙션 경로). */
 export function CandidateCard({ player, selected = false, onTap }: CandidateCardProps) {
+  const anonCode = useAnonCode()
   const color = POS_COLOR[player.positionGroup]
 
   return (
